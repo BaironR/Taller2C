@@ -1,8 +1,10 @@
 #pragma once
+#include "ABB.h"
 
 class Sistema {
 
 private:
+	ABB* abb;
 
 public:
 	Sistema();

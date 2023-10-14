@@ -2,8 +2,8 @@
 
 NodoABB::NodoABB(Paquete* paquete) {
 	this->paquete = paquete;
-	this->hijo_derecho;
-	this->hijo_izquierdo;
+	this->hijo_derecho = nullptr;
+	this->hijo_izquierdo = nullptr;
 }
 
 Paquete* NodoABB::get_paquete() {
