@@ -7,11 +7,12 @@ class ABB {
 private:
 	NodoABB* raiz;
 	void insertar_private(Paquete* paquete);
+	void retornar_ABB_private(NodoABB* nodo, std::queue<Paquete*>& cola);
 
 public:
 	ABB();
 	~ABB();
 	void eliminar_nodos(NodoABB* nodo);
 	void insertar(Paquete* paquete);
-	std::queue<Paquete*> retornar_ABB(NodoABB* nodo, std::queue<Paquete*> cola);
+	std::queue<Paquete*> retornar_ABB();
 };

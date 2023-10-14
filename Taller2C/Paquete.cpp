@@ -1,7 +1,7 @@
 #include "Paquete.h"
 
-Paquete::Paquete(std::string codigo_aduana, std::string tipo_envio, std::string numero_de_seguimiento, std::string fecha_recepcion_aduana,
-	int precio_base, int telefono_contacto, int peso_paquete, std::string dimension_paquete, bool contenido_fragil, std::string direccion)
+Paquete::Paquete(int codigo_aduana, std::string tipo_envio, std::string numero_de_seguimiento, std::string fecha_recepcion_aduana,
+	int precio_base, std::string telefono_contacto, int peso_paquete, std::string dimension_paquete, bool contenido_fragil, std::string direccion)
 {
 	this->codigo_aduana = codigo_aduana;
 	this->tipo_envio = tipo_envio;
@@ -15,7 +15,7 @@ Paquete::Paquete(std::string codigo_aduana, std::string tipo_envio, std::string 
 	this->direccion = direccion;
 }
 
-std::string Paquete::get_codigo_aduana() {
+int Paquete::get_codigo_aduana() {
 	return this->codigo_aduana;
 }
 
@@ -35,7 +35,7 @@ int Paquete::get_precio_base() {
 	return this->precio_base;
 }
 
-int Paquete::get_telefono_contacto() {
+std::string Paquete::get_telefono_contacto() {
 	return this->telefono_contacto;
 }
 
@@ -53,5 +53,40 @@ bool Paquete::get_contenido_fragil() {
 
 std::string Paquete::get_direccion() {
 	return this->direccion;
+}
+
+std::string Paquete::getRepartidor()
+{
+	return this->repartidor;
+}
+
+std::string Paquete::getCodigoSMT()
+{
+	return this->codigoSMT;
+}
+
+int Paquete::getTiempoEstimado()
+{
+	return this->tiempo_estimado;
+}
+
+void Paquete::setRepartidor(std::string repartidor)
+{
+	this->repartidor = repartidor;
+}
+
+void Paquete::setCodigoSMT(std::string codigoSMT)
+{
+	this->codigoSMT = codigoSMT;
+}
+
+void Paquete::setAduana(int codigoAduana)
+{
+	this->codigo_aduana = codigoAduana;
+}
+
+void Paquete::setTiempo(int tiempo_entrega)
+{
+	this->tiempo_estimado = tiempo_entrega;
 }
 

@@ -30,6 +30,9 @@
     <ClCompile Include="ABB.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="Heap.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sistema.h">
@@ -44,5 +47,13 @@
     <ClInclude Include="ABB.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Heap.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Aduana.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
   </ItemGroup>
 </Project>
