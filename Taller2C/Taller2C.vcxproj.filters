@@ -56,4 +56,9 @@
       <Filter>Archivos de recursos</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Aduana.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
