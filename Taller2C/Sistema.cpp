@@ -7,6 +7,9 @@
 #include <sstream>
 
 Sistema::Sistema() {
+	abb = new ABB();
+	hay_avl = false;
+	heap = nullptr;
 }
 
 void Sistema::menu_principal() {
@@ -193,6 +196,63 @@ void Sistema::menu_principal() {
 //...............  Menu aduana ...............//
 
 void Sistema::ingresar_envios() {
+	std::string nombreArchivo = "Aduana.txt";
+
+	// Crear un objeto ifstream para la lectura del archivo
+	std::ifstream archivo(nombreArchivo);
+
+	// Verificar si el archivo se abrió correctamente
+	if (!archivo.is_open()) {
+		std::cerr << "No se pudo abrir el archivo." << std::endl;
+		return;
+	}
+
+	// Variable para almacenar los datos leídos
+	std::string linea;
+	int contador_linea = 1;
+
+	// Almacenar en ABB el contenido del archivo línea por línea
+	while (std::getline(archivo, linea)) {
+
+		std::stringstream stream(linea);
+		std::string codigo_aduana_string, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana, dimension_paquete, direccion, precio_base_string,
+			peso_paquete_string, telefono_contacto, contenido_fragil_string;
+
+		std::getline(stream, codigo_aduana_string, ',');
+		std::getline(stream, tipo_envio, ',');
+		std::getline(stream, numero_de_seguimiento, ',');
+		std::getline(stream, fecha_recepcion_aduana, ',');
+		std::getline(stream, precio_base_string, ',');
+		std::getline(stream, telefono_contacto, ',');
+		std::getline(stream, peso_paquete_string, ',');
+		std::getline(stream, dimension_paquete, ',');
+		std::getline(stream, contenido_fragil_string, ',');
+		std::getline(stream, direccion, ',');
+
+		try {
+
+			int codigo_aduana = std::stoi(codigo_aduana_string);
+			int precio_base = std::stoi(precio_base_string);
+			int peso_paquete = std::stoi(peso_paquete_string);
+			bool contenido_fragil;
+
+			// Elimina espacios en blanco al principio
+			contenido_fragil_string.erase(0, contenido_fragil_string.find_first_not_of(" "));
+
+			// Elimina espacios en blanco al final
+			contenido_fragil_string.erase(contenido_fragil_string.find_last_not_of(" ") + 1);
+
+			if (contenido_fragil_string == "Si") {
+				contenido_fragil = true;
+
+			}
+			else if (contenido_fragil_string == "No") {
+				contenido_fragil = false;
+
+			}
+			else {
+				throw std::invalid_argument("");
+			}
 }
 
 void Sistema::despacho_sucursal() {
