@@ -259,7 +259,7 @@ void Sistema::despacho_sucursal() {
 }
 
 			Paquete* paquete = new Paquete(codigo_aduana, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana, precio_base, telefono_contacto,
-			peso_paquete, dimension_paquete, contenido_fragil, direccion);
+			peso_paquete, dimension_paquete, contenido_fragil, direccion, NULL, NULL, -1);
 			abb->insertar(paquete);
 
 		} catch (const std::invalid_argument& e) {

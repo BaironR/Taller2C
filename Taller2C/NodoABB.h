@@ -10,6 +10,7 @@ private:
 
 public:
 	NodoABB(Paquete* paquete);
+	~NodoABB();
 	Paquete* get_paquete();
 	NodoABB* get_hijo_izquierdo();
 	NodoABB* get_hijo_derecho();

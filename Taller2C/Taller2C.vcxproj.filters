@@ -30,7 +30,14 @@
     <ClCompile Include="ABB.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+
+    <ClCompile Include="AVL.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="NodoAVL.cpp">
+
     <ClCompile Include="Heap.cpp">
+
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,6 +54,14 @@
     <ClInclude Include="ABB.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+
+    <ClInclude Include="AVL.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="NodoAVL.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+
     <ClInclude Include="Heap.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -55,6 +70,7 @@
     <Text Include="Aduana.txt">
       <Filter>Archivos de recursos</Filter>
     </Text>
+
   </ItemGroup>
   <ItemGroup>
     <Text Include="Aduana.txt">
