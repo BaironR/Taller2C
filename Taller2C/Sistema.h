@@ -1,10 +1,17 @@
 #pragma once
 #include "ABB.h"
+#include <vector>
+#include <ctime>
+#include "Heap.h"
 
 class Sistema {
 
 private:
 	ABB* abb;
+	Heap* heap;
+	std::vector <std::string> fechas_reporte;
+	int cantidad_reportes; 
+	bool hay_avl;
 
 public:
 	Sistema();

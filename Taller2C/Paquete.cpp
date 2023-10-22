@@ -81,5 +81,39 @@ void Paquete::set_repartidor(std::string repartidor){
 
 void Paquete::set_tiempo_entrega(int tiempo_entrega){
 	this->tiempo_entrega = tiempo_entrega;
+
+std::string Paquete::getRepartidor()
+{
+	return this->repartidor;
+}
+
+std::string Paquete::getCodigoSMT()
+{
+	return this->codigoSMT;
+}
+
+int Paquete::getTiempoEstimado()
+{
+	return this->tiempo_estimado;
+}
+
+void Paquete::setRepartidor(std::string repartidor)
+{
+	this->repartidor = repartidor;
+}
+
+void Paquete::setCodigoSMT(std::string codigoSMT)
+{
+	this->codigoSMT = codigoSMT;
+}
+
+void Paquete::setAduana(int codigoAduana)
+{
+	this->codigo_aduana = codigoAduana;
+}
+
+void Paquete::setTiempo(int tiempo_entrega)
+{
+	this->tiempo_estimado = tiempo_entrega;
 }
 

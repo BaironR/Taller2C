@@ -53,7 +53,6 @@ void ABB::insertar_private(Paquete* paquete) {
 
 	if (!this->raiz) {
 		this->raiz = nodo; //Si el ABB está vacío
-
 	} else {
 
 		if (paquete->get_codigo_aduana() < padre->get_paquete()->get_codigo_aduana()) {
