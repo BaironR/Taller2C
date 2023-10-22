@@ -140,14 +140,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ABB.cpp" />
+    <ClCompile Include="AVL.cpp" />
     <ClCompile Include="NodoABB.cpp" />
+    <ClCompile Include="NodoAVL.cpp" />
     <ClCompile Include="Paquete.cpp" />
     <ClCompile Include="Sistema.cpp" />
     <ClCompile Include="Taller2C.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ABB.h" />
+    <ClInclude Include="AVL.h" />
     <ClInclude Include="NodoABB.h" />
+    <ClInclude Include="NodoAVL.h" />
     <ClInclude Include="Paquete.h" />
     <ClInclude Include="Sistema.h" />
   </ItemGroup>
