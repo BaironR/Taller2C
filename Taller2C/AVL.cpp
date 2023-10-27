@@ -52,6 +52,10 @@ void AVL::insertar(Paquete* paquete){
     this->raiz = insertar_private(this->raiz, paquete);
 }
 
+Paquete* AVL::buscar(int codigo_paquete){
+    return buscar_private(this->raiz, codigo_paquete);
+}
+
 NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete){
 
     if (nodo == nullptr){
@@ -87,6 +91,23 @@ NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete){
     }
 
     return nodo;
+}
+
+Paquete* AVL::buscar_private(NodoAVL* nodo, int codigo_paquete){
+    
+    if (!nodo) {
+        return nullptr;
+    }
+
+    if (codigo_paquete > nodo->get_paquete()->get_codigo_aduana()) {
+        return buscar_private(nodo->get_hijo_derecho(), codigo_paquete);
+
+    } else if (codigo_paquete < nodo->get_paquete()->get_codigo_aduana()) {
+
+        return buscar_private(nodo->get_hijo_izquierdo(), codigo_paquete);
+    }
+
+    return nodo->get_paquete();
 }
 
 

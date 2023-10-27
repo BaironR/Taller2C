@@ -5,6 +5,7 @@ class AVL{
 private:
 	NodoAVL* raiz;
 	NodoAVL* insertar_private(NodoAVL* nodo, Paquete* paquete);
+	Paquete* buscar_private(NodoAVL* nodo, int codigo_paquete);
 
 public:
 	AVL();
@@ -14,5 +15,6 @@ public:
 	NodoAVL* rotacion_rl(NodoAVL* nodo);
 	int get_altura_recursivo(NodoAVL* nodo, int nivel);
 	void insertar(Paquete* paquete);
+	Paquete* buscar(int codigo_paquete);
 };
 

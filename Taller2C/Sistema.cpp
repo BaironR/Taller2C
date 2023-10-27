@@ -2,12 +2,14 @@
 #include <iostream>
 #include "Sistema.h"
 #include "NodoABB.h"
+#include "NodoAVL.h"
 #include "Paquete.h"
 #include <fstream>
 #include <sstream>
 
 Sistema::Sistema() {
 	abb = new ABB();
+	avl = new AVL();
 	hay_avl = false;
 	heap = nullptr;
 }
@@ -254,10 +256,11 @@ void Sistema::ingresar_envios() {
 				throw std::invalid_argument("");
 			}
 
-			Paquete* paquete = new Paquete(codigo_aduana, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana, precio_base, telefono_contacto,
-				peso_paquete, dimension_paquete, contenido_fragil, direccion, NULL, NULL, -1);
-			abb->insertar(paquete);
+			Paquete* paquete = new Paquete(codigo_aduana, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana,
+				precio_base, telefono_contacto, peso_paquete, dimension_paquete, contenido_fragil, direccion,
+				"", "", -1);
 
+			abb->insertar(paquete);
 		}
 		catch (const std::invalid_argument& e) {
 			continue;
@@ -269,39 +272,66 @@ void Sistema::ingresar_envios() {
 }
 
 void Sistema::despacho_sucursal(){
+
 	std::queue<Paquete*> nodosABB = abb->retornar_ABB();
 
-	std::queue<Paquete*> fila_auxiliar;
-	int cantidad_paquetes = 0;
-
 	while (!nodosABB.empty()) { // SOLAMENTE PARA VISUALIZAR !!!!!, aca debe insertarse al arbol correspondiente a la sucursal
-		std::cout << nodosABB.front()->get_codigo_aduana() << std::endl;
-		fila_auxiliar.push(nodosABB.front());
-		cantidad_paquetes++;
+		avl->insertar(nodosABB.front());
 		nodosABB.pop();
 	}
 
 	delete abb;
-
-	heap = new Heap(cantidad_paquetes);
-
-	int tiempo = 10000;
-
-	while (!fila_auxiliar.empty()) {
-		fila_auxiliar.front()->set_tiempo_entrega(tiempo);
-		heap->insertar_paquete(fila_auxiliar.front());
-		fila_auxiliar.pop();
-		tiempo -= 500;
-	}
-
-	heap->imprimir_arreglo();
-
-	hay_avl = true;
 }
 
 //...............  Menu sucursal ...............//
 
 void Sistema::asignar_repartidores() {
+
+	std::string nombreArchivo = "Sucursal.txt";
+
+	// Crear un objeto ifstream para la lectura del archivo
+	std::ifstream archivo(nombreArchivo);
+
+	// Verificar si el archivo se abrió correctamente
+	if (!archivo.is_open()) {
+		std::cerr << "No se pudo abrir el archivo." << std::endl;
+		return;
+	}
+
+	// Variable para almacenar los datos leídos
+	std::string linea;
+	int contador_linea = 1;
+
+	// Almacenar en ABB el contenido del archivo línea por línea
+	while (std::getline(archivo, linea)) {
+
+		std::stringstream stream(linea);
+		std::string codigo_paquete_string, codigo_smt, repartidor, tiempo_entrega_string;
+
+		std::getline(stream, codigo_paquete_string, ',');
+		std::getline(stream, codigo_smt, ',');
+		std::getline(stream, repartidor, ',');
+		std::getline(stream, tiempo_entrega_string, ',');
+		
+		try {
+
+			int tiempo_entrega = std::stoi(tiempo_entrega_string);
+			int codigo_paquete = std::stoi(codigo_paquete_string);	
+			Paquete* paqueteAVL = avl->buscar(codigo_paquete);
+			paqueteAVL->set_codigo_smt(codigo_smt);
+			paqueteAVL->set_repartidor(repartidor);
+			paqueteAVL->set_tiempo_entrega(tiempo_entrega);
+
+		}
+		catch (const std::invalid_argument& e) {
+			continue;
+		}
+	}
+
+	// Cerrar el archivo después de la lectura
+	archivo.close();
+	hay_avl = true;
+
 }
 
 void Sistema::realizar_entregas() {

@@ -140,11 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ABB.cpp" />
-
     <ClCompile Include="AVL.cpp" />
-
     <ClCompile Include="Heap.cpp" />
-
     <ClCompile Include="NodoABB.cpp" />
     <ClCompile Include="NodoAVL.cpp" />
     <ClCompile Include="Paquete.cpp" />
@@ -153,11 +150,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ABB.h" />
-
     <ClInclude Include="AVL.h" />
-
     <ClInclude Include="Heap.h" />
-
     <ClInclude Include="NodoABB.h" />
     <ClInclude Include="NodoAVL.h" />
     <ClInclude Include="Paquete.h" />
@@ -165,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Aduana.txt" />
+    <Text Include="C:\Users\bairon\Desktop\Sucursal.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
