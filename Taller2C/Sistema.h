@@ -1,5 +1,6 @@
 #pragma once
 #include "ABB.h"
+#include "AVL.h"
 #include <vector>
 #include <ctime>
 #include "Heap.h"
@@ -8,6 +9,7 @@ class Sistema {
 
 private:
 	ABB* abb;
+	AVL* avl;
 	Heap* heap;
 	std::vector <std::string> fechas_reporte;
 	int cantidad_reportes; 

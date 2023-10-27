@@ -1,80 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Archivos de origen">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Archivos de encabezado">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Archivos de recursos">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="ABB.cpp" />
+    <ClCompile Include="AVL.cpp" />
+    <ClCompile Include="Heap.cpp" />
+    <ClCompile Include="NodoABB.cpp" />
+    <ClCompile Include="NodoAVL.cpp" />
+    <ClCompile Include="Paquete.cpp" />
+    <ClCompile Include="Sistema.cpp" />
+    <ClCompile Include="Taller2C.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Taller2C.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Sistema.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="NodoABB.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Paquete.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="ABB.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-
-    <ClCompile Include="AVL.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="NodoAVL.cpp">
-
-    <ClCompile Include="Heap.cpp">
-
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
+    <ClInclude Include="ABB.h" />
+    <ClInclude Include="AVL.h" />
+    <ClInclude Include="Heap.h" />
+    <ClInclude Include="NodoABB.h" />
+    <ClInclude Include="NodoAVL.h" />
+    <ClInclude Include="Paquete.h" />
+    <ClInclude Include="Sistema.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sistema.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="NodoABB.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Paquete.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="ABB.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-
-    <ClInclude Include="AVL.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="NodoAVL.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-
-    <ClInclude Include="Heap.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Aduana.txt">
-      <Filter>Archivos de recursos</Filter>
-    </Text>
-
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Aduana.txt">
-      <Filter>Archivos de recursos</Filter>
-    </Text>
+    <Text Include="Aduana.txt" />
+    <Text Include="C:\Users\bairon\Desktop\Sucursal.txt" />
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ void Heap::insertar_paquete(Paquete* paquete_agregar)
 	int indice = cantidad_actual - 1;
 	arreglo_paquetes[indice] = paquete_agregar;
 
-	while (indice != 0 && arreglo_paquetes[get_padre(indice)]->getTiempoEstimado() > arreglo_paquetes[indice]->getTiempoEstimado()) {
+	while (indice != 0 && arreglo_paquetes[get_padre(indice)]->get_tiempo_entrega() > arreglo_paquetes[indice]->get_tiempo_entrega()) {
 		std::swap(arreglo_paquetes[indice],arreglo_paquetes[get_padre(indice)]);
 		indice = get_padre(indice);
 	}
@@ -76,9 +76,6 @@ void Heap::imprimir_arreglo() {
 	for (int i = 0; i < this->cantidad_actual; i++) {
 		Paquete* paquete = arreglo_paquetes[i];
 
-		std::cout << paquete->get_codigo_aduana() << "-" << paquete->get_contenido_fragil() << "-" << paquete->getTiempoEstimado() << std::endl;
+		std::cout << paquete->get_codigo_aduana() << "-" << paquete->get_contenido_fragil() << "-" << paquete->get_tiempo_entrega() << std::endl;
 	}
-
-
-
 }
