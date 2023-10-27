@@ -15,14 +15,9 @@ public:
 	void heapify_min(int indice);
 	Paquete* retornar_paquete();
 	Paquete* extraer_paquete();
-
 	int get_padre(int indice);
 	int get_hijo_izq(int indice);
 	int get_hijo_der(int indice);
-
 	void imprimir_arreglo();
-
-
-
 };
 
