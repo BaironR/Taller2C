@@ -19,6 +19,11 @@ std::queue<Paquete*> ABB::retornar_ABB() {
 	return cola;
 }
 
+NodoABB* ABB::retornar_raiz_abb()
+{
+	return this->raiz;
+}
+
 void ABB::eliminar_nodos(NodoABB* nodo) {
 
 	if (nodo) {

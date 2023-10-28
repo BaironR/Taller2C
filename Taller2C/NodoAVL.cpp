@@ -23,3 +23,5 @@ NodoAVL* NodoAVL::get_hijo_derecho(){
 Paquete* NodoAVL::get_paquete(){
 	return this->paquete;
 }
+
+

@@ -56,6 +56,47 @@ Paquete* AVL::buscar(int codigo_paquete){
     return buscar_private(this->raiz, codigo_paquete);
 }
 
+NodoAVL* AVL::get_raiz()
+{
+    return this->raiz;
+}
+
+void AVL::totalTiempoCantidadTipoEnvio(std::string tipo_envio, int* totalcantidad)
+{
+    totalTiempoCantidadTipoEnvioPrivate(this->raiz, tipo_envio, totalcantidad);
+}
+
+std::queue<Paquete*> AVL::paquetes_mayor_24_horas()
+{
+    std::queue<Paquete*> fila_mayor_24Horas;
+    buscar_paquetes_mayor_24horas(this->raiz,fila_mayor_24Horas);
+    return fila_mayor_24Horas;
+}
+
+int AVL::cantidad_nodos(NodoAVL* nodo)
+{
+    return 0;
+}
+
+void AVL::obtener_paquetes_private(NodoAVL* nodo, std::queue <Paquete*>& cola)
+{
+   if (nodo == nullptr) {
+       return;
+   }
+
+    cola.push(nodo->get_paquete());
+    obtener_paquetes_private(nodo->get_hijo_izquierdo(),cola);
+    obtener_paquetes_private(nodo->get_hijo_derecho(),cola);
+}
+
+std::queue<Paquete*> AVL::obtener_todos_paquetes()
+{
+    std::queue <Paquete*> cola;
+    obtener_paquetes_private(this->raiz, cola);
+    return cola;
+}
+
+
 NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete){
 
     if (nodo == nullptr){
@@ -109,6 +150,40 @@ Paquete* AVL::buscar_private(NodoAVL* nodo, int codigo_paquete){
 
     return nodo->get_paquete();
 }
+
+void AVL::totalTiempoCantidadTipoEnvioPrivate(NodoAVL* nodo, std::string tipo_envio, int*& totalcantidad)
+{
+    if (nodo == nullptr) {
+        return;
+    }
+
+    if (nodo->get_paquete()->get_tipo_envio() == tipo_envio) {
+        totalcantidad[0] += nodo->get_paquete()->get_tiempo_entrega();
+        totalcantidad[1]++;
+        return;
+    }
+
+    totalTiempoCantidadTipoEnvioPrivate(nodo->get_hijo_izquierdo(), tipo_envio, totalcantidad);
+    totalTiempoCantidadTipoEnvioPrivate(nodo->get_hijo_derecho(), tipo_envio, totalcantidad);
+}
+
+
+
+void AVL::buscar_paquetes_mayor_24horas(NodoAVL* nodo, std::queue<Paquete*> cola)
+{
+    if (nodo == nullptr) {
+        return;
+    }
+
+    if (nodo->get_paquete()->get_tiempo_entrega() > 1600) {
+        cola.push(nodo->get_paquete());
+    }
+
+    buscar_paquetes_mayor_24horas(nodo->get_hijo_izquierdo(), cola);
+    buscar_paquetes_mayor_24horas(nodo->get_hijo_derecho(), cola);
+}
+
+
 
 
 

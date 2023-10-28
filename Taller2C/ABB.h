@@ -15,4 +15,5 @@ public:
 	void eliminar_nodos(NodoABB* nodo);
 	void insertar(Paquete* paquete);
 	std::queue<Paquete*> retornar_ABB();
+	NodoABB* retornar_raiz_abb();
 };

@@ -4,6 +4,7 @@
 #include <vector>
 #include <ctime>
 #include "Heap.h"
+#include <string>
 
 class Sistema {
 
@@ -13,7 +14,10 @@ private:
 	Heap* heap;
 	std::vector <std::string> fechas_reporte;
 	int cantidad_reportes; 
+	bool abb_eliminado = false;
 	bool hay_avl;
+	bool avl_eliminado = false;
+	bool heap_eliminado = false;
 
 public:
 	Sistema();
@@ -29,4 +33,11 @@ public:
 	void asignar_repartidores();
 	void realizar_entregas();
 	void generar_reporte();
+
+	void leer_reporte(std::string nombre_reporte);
+	std::string* obtener_fecha_actual();
+
+
+
+
 };
