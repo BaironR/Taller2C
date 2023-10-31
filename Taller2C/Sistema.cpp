@@ -154,6 +154,14 @@ void Sistema::menu_principal() {
 									termino = true;
 									break;
 
+
+									//ELIMINAR LUEGO !!!!!!!! DEBUGUEO
+								case(5):
+									debugueo();
+									break;
+
+
+
 								default:
 									//Opción default: cuando el usuario ingrese un número que no esté en el rango
 									//de 1 y 2. Despliega un mensaje de error.
@@ -296,10 +304,16 @@ void Sistema::despacho_sucursal(){
 				std::queue<Paquete*> nodosABB = abb->retornar_ABB();
 
 				while (!nodosABB.empty()) {
+					Paquete* paquete = avl->buscar(nodosABB.front()->get_codigo_aduana());
 
+					if (paquete != nullptr) {
+
+					}
+
+
+
+					nodosABB.pop();
 				}
-
-
 			}
 			else {
 				avl = new AVL();
@@ -313,6 +327,7 @@ void Sistema::despacho_sucursal(){
 			}
 
 			delete abb;
+			abb = nullptr;
 			hay_abb = false;
 		}
 	}else{
@@ -327,7 +342,9 @@ void Sistema::asignar_repartidores() {
 	std::cout << "Asignar repartidores" << std::endl;
 
 	if (hay_avl) {
-		if (avl->get_raiz() != nullptr) {
+
+		NodoAVL* raiz = avl->get_raiz();
+		if (raiz != nullptr) {
 
 			std::string nombreArchivo;
 			std::cout << "Ingrese el nombre del archivo para leer los datos de la sucursal: ";
@@ -505,37 +522,44 @@ void Sistema::reporte_eliminar_avl(bool heap_o_abb)
 }
 
 void Sistema::realizar_entregas() {
-	
-	if (hay_avl) {
-		if (avl->get_raiz() == nullptr) {
-			std::cout << "El arbol AVL de la sucursal esta vacio, intente de nuevo.";
-			return;
-		}else{
-			bool todos_con_repartidor = avl->paquetesConRepartidor();
-			if (todos_con_repartidor) {
-				if (hay_heap) {
+	try {
+		if (hay_avl) {
+			if (avl->get_raiz() == nullptr) {
+				std::cout << "El arbol AVL de la sucursal esta vacio, intente de nuevo.";
+				return;
+			}
+			else {
+				bool todos_con_repartidor = avl->paquetesConRepartidor();
+				if (todos_con_repartidor) {
+					if (hay_heap) {
 
 
-					//Falta averiguar qué hacer si ya existe un heap.
+						//Falta averiguar qué hacer si ya existe un heap.
 
 
 
+					}
+					else {
+						heap = new Heap(100);
+						hay_heap = true;
+						reporte_eliminar_avl(true);
+						delete avl;
+						hay_avl = false;
+					}
 				}
 				else {
-					heap = new Heap(100);
-					hay_heap = true;
-					reporte_eliminar_avl(true);
-					delete avl;
-					hay_avl = false;
+					std::cout << "No se puede realizar la entrega de los paquetes: hay paquetes en la sucursal sin repartidor. Intente de nuevo" << std::endl;
 				}
-			}else{
-				std::cout << "No se puede realizar la entrega de los paquetes: hay paquetes en la sucursal sin repartidor. Intente de nuevo" << std::endl;
 			}
 		}
+		else {
+			std::cout << "El arbol AVL de la sucursal no existe, intente de nuevo." << std::endl;
+		}
 	}
-	else {
-		std::cout << "El arbol AVL de la sucursal no existe, intente de nuevo." << std::endl;
+	catch (std::exception e) {
+
 	}
+	
 }
 
 void Sistema::generar_reporte() {
@@ -632,15 +656,8 @@ void Sistema::generar_reporte() {
 		std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
 	}
 
-
-	if (hay_avl) {
-		int* tiempo_cantidad_express = new int[2];
-		int* tiempo_cantidad_economico = new int[2];
-		int* tiempo_cantidad_gratis = new int[2];
-
-		tiempo_cantidad_express = avl->totalTiempoCantidadTipoEnvio("Express", tiempo_cantidad_express);
-		tiempo_cantidad_economico = avl->totalTiempoCantidadTipoEnvio("Economico", tiempo_cantidad_economico);
-		tiempo_cantidad_gratis = avl->totalTiempoCantidadTipoEnvio("Gratis", tiempo_cantidad_gratis);
+	try {
+		if (hay_avl) {
 
 
 
@@ -648,12 +665,13 @@ void Sistema::generar_reporte() {
 
 
 
-
-
-
+		}
+		else {
+			std::cout << "No se puede lista los codigos SMT de los paquetes con una entrega myor a 24 horas ni desplegar promedios de tiempo, ya que no existe el arbol AVL de Sucursal." << std::endl;
+		}
 	}
-	else {
-		std::cout << "No se puede lista los codigos SMT de los paquetes con una entrega myor a 24 horas ni desplegar promedios de tiempo, ya que no existe el arbol AVL de Sucursal." << std::endl;
+	catch (std::exception e) {
+		std::cout << "Hubo un error de tipo " << e.what() << ", intente de nuevo." << std::endl;
 	}
 	
 
@@ -710,3 +728,12 @@ void Sistema::leer_reporte(std::string nombre_reporte){
 }
 
 
+void Sistema::debugueo()
+{
+	std::queue<Paquete*> fila = avl->obtener_todos_paquetes();
+
+	while (!fila.empty()) {
+		std::cout << fila.front()->get_codigo_aduana() << std::endl;
+		fila.pop();
+	}
+}

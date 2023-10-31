@@ -1,6 +1,8 @@
 #pragma once
 #include <queue>
 #include "NodoAVL.h"
+#include <cmath>
+
 class AVL{
 
 private:
@@ -27,5 +29,7 @@ public:
 	std::queue<Paquete*> paquetes_mayor_24_horas();
 	std::queue<Paquete*> obtener_todos_paquetes();
 	bool paquetesConRepartidor();
+	int obtener_altura(NodoAVL* nodo);
+	int factor_de_balance(NodoAVL* nodo);
 };
 

@@ -4,11 +4,22 @@ NodoAVL::NodoAVL(Paquete* paquete){
 	this->paquete = paquete;
 	this->hijo_izquierdo = nullptr;
 	this->hijo_derecho = nullptr;
+	this->altura = 1;
 }
 
 NodoAVL::~NodoAVL()
 {
-	
+	delete paquete;
+}
+
+void NodoAVL::set_altura(int altura)
+{
+	this->altura = altura;
+}
+
+int NodoAVL::get_altura()
+{
+	return this->altura;
 }
 
 void NodoAVL::set_hijo_izquierdo(NodoAVL* hijo_izquierdo){

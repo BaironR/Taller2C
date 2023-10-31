@@ -7,7 +7,7 @@ private:
 	Paquete* paquete;
 	NodoAVL* hijo_izquierdo;
 	NodoAVL* hijo_derecho;
-
+	int altura;
 public:
 	NodoAVL(Paquete* paquete);
 	~NodoAVL();
@@ -16,5 +16,7 @@ public:
 	NodoAVL* get_hijo_izquierdo();
 	NodoAVL* get_hijo_derecho();
 	Paquete* get_paquete();
+	void set_altura(int altura);
+	int get_altura();
 };
 

@@ -38,6 +38,6 @@ public:
 	void reporte_eliminar_avl(bool heap_o_abb);
 
 
-
+	void debugueo();
 
 };
