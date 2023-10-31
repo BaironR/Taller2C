@@ -14,6 +14,7 @@ private:
 	void obtener_paquetes_private(NodoAVL* nodo, std::queue <Paquete*>& cola_paquetes);
 	bool paquetesConRepartidor_private(NodoAVL* nodo);
 	void destruirAVLRecurs(NodoAVL* nodo);
+	int cantidad_nodos_private(NodoAVL* nodo);
 public:
 	AVL();
 	~AVL();
@@ -31,5 +32,6 @@ public:
 	bool paquetesConRepartidor();
 	int obtener_altura(NodoAVL* nodo);
 	int factor_de_balance(NodoAVL* nodo);
+	int cantidad_nodos();
 };
 

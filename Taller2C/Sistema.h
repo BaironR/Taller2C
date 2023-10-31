@@ -5,6 +5,7 @@
 #include <ctime>
 #include "Heap.h"
 #include <string>
+#include <vector>
 
 class Sistema {
 
@@ -17,6 +18,8 @@ private:
 	bool hay_abb = false;
 	bool hay_avl = false;
 	bool hay_heap = false;
+	std::vector <std::string> nombres_conjuntos_aduana;
+	std::vector <int> valor_conjuntos_aduana;
 
 public:
 	Sistema();

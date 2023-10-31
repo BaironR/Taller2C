@@ -311,12 +311,26 @@ void Sistema::despacho_sucursal(){
 				while (!nodosABB.empty()) {
 					Paquete* paquete = avl->buscar(nodosABB.front()->get_codigo_aduana());
 
-					if (paquete != nullptr) {
+					if (paquete == nullptr) {
+						reporte_eliminar_avl(false);
+						delete avl;
+						hay_avl = false;
 
+						avl = new AVL();
+						hay_avl = true;
+
+						std::queue<Paquete*> insertar_nuevo_avl = abb->retornar_ABB();
+						while (!insertar_nuevo_avl.empty()) {
+							Paquete* paquete_nuevo = new Paquete(insertar_nuevo_avl.front()->get_codigo_aduana(), insertar_nuevo_avl.front()->get_tipo_envio(),
+								insertar_nuevo_avl.front()->get_numero_de_seguimiento(), insertar_nuevo_avl.front()->get_fecha_recepcion_aduana(), insertar_nuevo_avl.front()->get_precio_base(),
+								insertar_nuevo_avl.front()->get_telefono_contacto(), insertar_nuevo_avl.front()->get_peso_paquete(), insertar_nuevo_avl.front()->get_dimension_paquete(),
+								insertar_nuevo_avl.front()->get_contenido_fragil(), insertar_nuevo_avl.front()->get_direccion(), insertar_nuevo_avl.front()->get_codigo_smt(), insertar_nuevo_avl.front()->get_repartidor(),
+								insertar_nuevo_avl.front()->get_tiempo_entrega());
+							avl->insertar(paquete_nuevo);
+							insertar_nuevo_avl.pop();
+						}
+						break;
 					}
-
-
-
 					nodosABB.pop();
 				}
 			}
@@ -491,7 +505,12 @@ void Sistema::reporte_eliminar_avl(bool heap_o_abb)
 	}
 	else {
 		while (!fila_paquetes.empty()) {
-			Paquete* paquete = fila_paquetes.front();
+			Paquete* paquete = new Paquete(fila_paquetes.front()->get_codigo_aduana(), fila_paquetes.front()->get_tipo_envio(),
+				fila_paquetes.front()->get_numero_de_seguimiento(), fila_paquetes.front()->get_fecha_recepcion_aduana(), fila_paquetes.front()->get_precio_base(),
+				fila_paquetes.front()->get_telefono_contacto(), fila_paquetes.front()->get_peso_paquete(), fila_paquetes.front()->get_dimension_paquete(),
+				fila_paquetes.front()->get_contenido_fragil(), fila_paquetes.front()->get_direccion(), fila_paquetes.front()->get_codigo_smt(), fila_paquetes.front()->get_repartidor(),
+				fila_paquetes.front()->get_tiempo_entrega());
+
 			std::string fragil = "No";
 			if (paquete->get_contenido_fragil()) {
 				fragil = "Si";
@@ -551,7 +570,8 @@ void Sistema::realizar_entregas() {
 
 					}
 					else {
-						heap = new Heap(100);
+						int cantidad_nodos_avl = avl->cantidad_nodos();
+						heap = new Heap(cantidad_nodos_avl);
 						hay_heap = true;
 						reporte_eliminar_avl(true);
 						delete avl;
@@ -671,11 +691,6 @@ void Sistema::generar_reporte() {
 		if (hay_avl) {
 
 
-
-
-
-
-
 		}
 		else {
 			std::cout << "No se puede lista los codigos SMT de los paquetes con una entrega myor a 24 horas ni desplegar promedios de tiempo, ya que no existe el arbol AVL de Sucursal." << std::endl;
@@ -684,11 +699,6 @@ void Sistema::generar_reporte() {
 	catch (std::exception e) {
 		std::cout << "Hubo un error de tipo " << e.what() << ", intente de nuevo." << std::endl;
 	}
-	
-
-
-
-
 
 }
 

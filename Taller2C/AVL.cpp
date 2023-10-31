@@ -16,6 +16,15 @@ void AVL::destruirAVLRecurs(NodoAVL* nodo)
     delete nodo;
 }
 
+int AVL::cantidad_nodos_private(NodoAVL* nodo)
+{
+    if (nodo == nullptr) {
+        return 0;
+    }
+
+    return 1 + cantidad_nodos_private(nodo->get_hijo_izquierdo()) + cantidad_nodos_private(nodo->get_hijo_derecho());
+}
+
 AVL::~AVL()
 {
     destruirAVLRecurs(this->raiz);
@@ -153,6 +162,11 @@ int AVL::factor_de_balance(NodoAVL* nodo)
         return 0;
     }
     return obtener_altura(nodo->get_hijo_izquierdo()) - obtener_altura(nodo->get_hijo_derecho());
+}
+
+int AVL::cantidad_nodos()
+{
+    return cantidad_nodos_private(this->raiz);
 }
 
 
