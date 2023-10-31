@@ -6,6 +6,11 @@ NodoABB::NodoABB(Paquete* paquete) {
 	this->hijo_izquierdo = nullptr;
 }
 
+NodoABB::~NodoABB()
+{
+	delete paquete;
+}
+
 Paquete* NodoABB::get_paquete() {
 	return this->paquete;
 }

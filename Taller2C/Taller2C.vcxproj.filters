@@ -21,6 +21,5 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Aduana.txt" />
-    <Text Include="C:\Users\bairon\Desktop\Sucursal.txt" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,22 @@ AVL::AVL(){
     this->raiz = nullptr;
 }
 
+void AVL::destruirAVLRecurs(NodoAVL* nodo)
+{
+    if (nodo == nullptr) {
+        return;
+    }
+
+    destruirAVLRecurs(nodo->get_hijo_izquierdo());
+    destruirAVLRecurs(nodo->get_hijo_derecho());
+    delete nodo;
+}
+
+AVL::~AVL()
+{
+    destruirAVLRecurs(this->raiz);
+}
+
 NodoAVL* AVL::rotacion_rr(NodoAVL* nodo){
 
     NodoAVL* x = nodo->get_hijo_izquierdo();
@@ -61,9 +77,10 @@ NodoAVL* AVL::get_raiz()
     return this->raiz;
 }
 
-void AVL::totalTiempoCantidadTipoEnvio(std::string tipo_envio, int* totalcantidad)
+int* AVL::totalTiempoCantidadTipoEnvio(std::string tipo_envio, int* totalcantidad)
 {
     totalTiempoCantidadTipoEnvioPrivate(this->raiz, tipo_envio, totalcantidad);
+    return totalcantidad;
 }
 
 std::queue<Paquete*> AVL::paquetes_mayor_24_horas()
@@ -71,11 +88,6 @@ std::queue<Paquete*> AVL::paquetes_mayor_24_horas()
     std::queue<Paquete*> fila_mayor_24Horas;
     buscar_paquetes_mayor_24horas(this->raiz,fila_mayor_24Horas);
     return fila_mayor_24Horas;
-}
-
-int AVL::cantidad_nodos(NodoAVL* nodo)
-{
-    return 0;
 }
 
 void AVL::obtener_paquetes_private(NodoAVL* nodo, std::queue <Paquete*>& cola)
@@ -89,6 +101,21 @@ void AVL::obtener_paquetes_private(NodoAVL* nodo, std::queue <Paquete*>& cola)
     obtener_paquetes_private(nodo->get_hijo_derecho(),cola);
 }
 
+bool AVL::paquetesConRepartidor_private(NodoAVL* nodo)
+{
+    if (nodo == nullptr) {
+        return true;
+    }
+
+    if (nodo->get_paquete()->get_repartidor() == "") {
+        return false;
+    }
+
+    return paquetesConRepartidor_private(nodo->get_hijo_izquierdo()) && 
+        paquetesConRepartidor_private(nodo->get_hijo_derecho());
+}
+
+
 std::queue<Paquete*> AVL::obtener_todos_paquetes()
 {
     std::queue <Paquete*> cola;
@@ -96,14 +123,17 @@ std::queue<Paquete*> AVL::obtener_todos_paquetes()
     return cola;
 }
 
+bool AVL::paquetesConRepartidor()
+{
+    return paquetesConRepartidor_private(this->raiz);
+}
+
 
 NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete){
 
     if (nodo == nullptr){
         nodo = new NodoAVL(paquete);
-    }
-
-    else if (paquete->get_codigo_aduana() < nodo->get_paquete()->get_codigo_aduana()) {
+    }else if (paquete->get_codigo_aduana() < nodo->get_paquete()->get_codigo_aduana()) {
 
         nodo->set_hijo_izquierdo(insertar_private(nodo->get_hijo_izquierdo(), paquete)); 
 
@@ -115,12 +145,10 @@ NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete){
                 nodo = rotacion_lr(nodo); 
             }        
         }
-    }
-    else if (paquete->get_codigo_aduana() > nodo->get_paquete()->get_codigo_aduana())
+    }else if (paquete->get_codigo_aduana() > nodo->get_paquete()->get_codigo_aduana())
     {
         nodo->set_hijo_derecho(insertar_private(nodo->get_hijo_derecho(), paquete)) ;
-        if (get_altura_recursivo(nodo->get_hijo_derecho(), 0) - get_altura_recursivo(nodo->get_hijo_derecho(), 0) == 2)
-        {
+        if (get_altura_recursivo(nodo->get_hijo_derecho(), 0) - get_altura_recursivo(nodo->get_hijo_derecho(), 0) == 2){
             if (paquete->get_codigo_aduana() > nodo->get_hijo_derecho()->get_paquete()->get_codigo_aduana()) {
 
                 nodo = rotacion_ll(nodo);
@@ -130,7 +158,6 @@ NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete){
             }
         }
     }
-
     return nodo;
 }
 
@@ -151,7 +178,7 @@ Paquete* AVL::buscar_private(NodoAVL* nodo, int codigo_paquete){
     return nodo->get_paquete();
 }
 
-void AVL::totalTiempoCantidadTipoEnvioPrivate(NodoAVL* nodo, std::string tipo_envio, int*& totalcantidad)
+void AVL::totalTiempoCantidadTipoEnvioPrivate(NodoAVL* nodo, std::string tipo_envio, int* totalcantidad)
 {
     if (nodo == nullptr) {
         return;
@@ -169,7 +196,7 @@ void AVL::totalTiempoCantidadTipoEnvioPrivate(NodoAVL* nodo, std::string tipo_en
 
 
 
-void AVL::buscar_paquetes_mayor_24horas(NodoAVL* nodo, std::queue<Paquete*> cola)
+void AVL::buscar_paquetes_mayor_24horas(NodoAVL* nodo, std::queue<Paquete*>& cola)
 {
     if (nodo == nullptr) {
         return;

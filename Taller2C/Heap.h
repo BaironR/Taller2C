@@ -10,6 +10,7 @@ private:
 
 public:
 	Heap(int tamanio_maximo);
+	~Heap();
 	void insertar_paquete(Paquete* paquete_agregar);
 	void eliminar_paquete(int indice);
 	void heapify_min(int indice);

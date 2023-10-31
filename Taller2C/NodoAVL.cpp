@@ -2,6 +2,13 @@
 
 NodoAVL::NodoAVL(Paquete* paquete){
 	this->paquete = paquete;
+	this->hijo_izquierdo = nullptr;
+	this->hijo_derecho = nullptr;
+}
+
+NodoAVL::~NodoAVL()
+{
+	
 }
 
 void NodoAVL::set_hijo_izquierdo(NodoAVL* hijo_izquierdo){

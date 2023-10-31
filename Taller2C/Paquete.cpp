@@ -17,6 +17,13 @@ Paquete::Paquete(int codigo_aduana, std::string tipo_envio, std::string numero_d
 	this->dimension_paquete = dimension_paquete;
 	this->contenido_fragil = contenido_fragil;
 	this->direccion = direccion;
+	this->repartidor = repartidor;
+	this->codigo_smt = codigo_smt;
+	this->tiempo_entrega = tiempo_entrega;
+}
+
+Paquete::~Paquete()
+{
 }
 
 int Paquete::get_codigo_aduana() {

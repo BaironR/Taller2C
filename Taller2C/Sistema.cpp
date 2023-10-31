@@ -8,9 +8,8 @@
 #include <sstream>
 
 Sistema::Sistema() {
-	abb = new ABB();
-	avl = new AVL();
-	hay_avl = false;
+	abb = nullptr;
+	avl = nullptr;
 	heap = nullptr;
 }
 
@@ -198,14 +197,24 @@ void Sistema::menu_principal() {
 //...............  Menu aduana ...............//
 
 void Sistema::ingresar_envios() {
-	std::string nombreArchivo = "Aduana.txt";
+
+	if (hay_abb == false) {
+		abb = new ABB();
+		hay_abb = true;
+	}
+	
+	std::string nombreArchivo = "";
+	std::cout << std::endl;
+	std::cout << "Ingresar envios" << std::endl;
+	std::cout << "Ingrese por teclado el nombre del archivo de la aduana a leer (incluyendo su formato, si es .txt por ejemplo.) " << std::endl;
+	std::cin >> nombreArchivo;
 
 	// Crear un objeto ifstream para la lectura del archivo
 	std::ifstream archivo(nombreArchivo);
 
 	// Verificar si el archivo se abrió correctamente
 	if (!archivo.is_open()) {
-		std::cerr << "No se pudo abrir el archivo." << std::endl;
+		std::cerr << "No se pudo abrir el archivo, intente de nuevo con otro nombre." << std::endl;
 		return;
 	}
 
@@ -274,90 +283,108 @@ void Sistema::ingresar_envios() {
 
 void Sistema::despacho_sucursal(){
 
-	if (abb_eliminado == false) {
+	//Si existe un árbol ABB, entonces se comprueba si está vacía o si hay paquetes en él.
+	//Para este último caso, hay que corroborar si ya existe un árbol AVL o no.
+	//Si no hay un AVL, se crea directamente. En el caso contrario, hay que corroborar si hay algún dato nuevo.
+
+	if (hay_abb) {
 		if (abb->retornar_raiz_abb() == nullptr) {
 			std::cout << "Error: no hay ningun paquete disponible en la Aduana." << std::endl;
 		}
 		else {
-			std::queue<Paquete*> nodosABB = abb->retornar_ABB();
+			if (hay_avl) {
+				std::queue<Paquete*> nodosABB = abb->retornar_ABB();
 
-			while (!nodosABB.empty()) { // SOLAMENTE PARA VISUALIZAR !!!!!, aca debe insertarse al arbol correspondiente a la sucursal
-				avl->insertar(nodosABB.front());
-				nodosABB.pop();
+				while (!nodosABB.empty()) {
+
+				}
+
+
+			}
+			else {
+				avl = new AVL();
+				hay_avl = true;
+
+				std::queue<Paquete*> nodosABB = abb->retornar_ABB();
+				while (!nodosABB.empty()) {
+					avl->insertar(nodosABB.front());
+					nodosABB.pop();
+				}
 			}
 
-
-
-
-
 			delete abb;
-			abb_eliminado = true;
+			hay_abb = false;
 		}
+	}else{
+		std::cout << "El arbol ABB de Aduana no existe, intente de nuevo." << std::endl;
 	}
-	else {
-		std::cout << "El arbol ABB de Aduana ha sido eliminado, intente de nuevo." << std::endl;
-	}
-	
 }
 
 //...............  Menu sucursal ...............//
 
 void Sistema::asignar_repartidores() {
 
-	if (avl->get_raiz() != nullptr) {
-		std::string nombreArchivo = "Sucursal.txt";
+	std::cout << "Asignar repartidores" << std::endl;
 
-		// Crear un objeto ifstream para la lectura del archivo
-		std::ifstream archivo(nombreArchivo);
+	if (hay_avl) {
+		if (avl->get_raiz() != nullptr) {
 
-		// Verificar si el archivo se abrió correctamente
-		if (!archivo.is_open()) {
-			std::cerr << "No se pudo abrir el archivo." << std::endl;
-			return;
-		}
+			std::string nombreArchivo;
+			std::cout << "Ingrese el nombre del archivo para leer los datos de la sucursal: ";
+			std::cin >> nombreArchivo;
 
-		// Variable para almacenar los datos leídos
-		std::string linea;
-		int contador_linea = 1;
+			// Crear un objeto ifstream para la lectura del archivo
+			std::ifstream archivo(nombreArchivo);
 
-		// Almacenar en ABB el contenido del archivo línea por línea
-		while (std::getline(archivo, linea)) {
+			// Verificar si el archivo se abrió correctamente
+			if (!archivo.is_open()) {
+				std::cerr << "No se pudo abrir el archivo." << std::endl;
+				return;
+			}
 
-			std::stringstream stream(linea);
-			std::string codigo_paquete_string, codigo_smt, repartidor, tiempo_entrega_string;
+			// Variable para almacenar los datos leídos
+			std::string linea;
+			int contador_linea = 1;
 
-			std::getline(stream, codigo_paquete_string, ',');
-			std::getline(stream, codigo_smt, ',');
-			std::getline(stream, repartidor, ',');
-			std::getline(stream, tiempo_entrega_string, ',');
+			// Almacenar en ABB el contenido del archivo línea por línea
+			while (std::getline(archivo, linea)) {
 
-			try {
+
+				try {
+				std::stringstream stream(linea);
+				std::string codigo_paquete_string, codigo_smt, repartidor, tiempo_entrega_string;
+
+				std::getline(stream, codigo_paquete_string, ',');
+				std::getline(stream, codigo_smt, ',');
+				std::getline(stream, repartidor, ',');
+				std::getline(stream, tiempo_entrega_string, ',');
 
 				int tiempo_entrega = std::stoi(tiempo_entrega_string);
 				int codigo_paquete = std::stoi(codigo_paquete_string);
 				Paquete* paqueteAVL = avl->buscar(codigo_paquete);
-				paqueteAVL->set_codigo_smt(codigo_smt);
-				paqueteAVL->set_repartidor(repartidor);
-				paqueteAVL->set_tiempo_entrega(tiempo_entrega);
 
-			}
-			catch (const std::invalid_argument& e) {
-				continue;
+					if (paqueteAVL != nullptr) {
+						paqueteAVL->set_codigo_smt(codigo_smt);
+						paqueteAVL->set_repartidor(repartidor);
+						paqueteAVL->set_tiempo_entrega(tiempo_entrega);
+					}
+				}
+				catch (const std::invalid_argument& e) {
+					continue;
 			}
 		}
-
-		// Cerrar el archivo después de la lectura
-		archivo.close();
-		hay_avl = true;
+			// Cerrar el archivo después de la lectura.
+			archivo.close();
+	}else {
+		std::cout << "No hay ningun paquete disponible en el arbol AVL, intentelo de nuevo." << std::endl;
 	}
-
-	
-
+}else {
+	std::cout << "No existe ningun arbol AVL para asignar repartidores, intente de nuevo." << std::endl;
+}
 }
 
 std::string* Sistema::obtener_fecha_actual()
 {
-
 	std::string* nombre_y_fecha = new std::string[2];
 
 	if (hay_avl) {
@@ -423,57 +450,91 @@ std::string* Sistema::obtener_fecha_actual()
 	return nombre_y_fecha;
 }
 
-void Sistema::realizar_entregas() {
-	
-	hay_avl = true;
+void Sistema::reporte_eliminar_avl(bool heap_o_abb)
+{
 	std::string* nombrearchivo_fecha = obtener_fecha_actual();
 	std::ofstream nuevo_reporte;
 	std::string nombre_archivo = nombrearchivo_fecha[0];
-	nuevo_reporte.open(nombre_archivo,std::ios::out);
-
-	std::queue <Paquete*> fila;
-
-	if (avl->get_raiz() != nullptr) {
-		fila = avl->obtener_todos_paquetes();
-	}
+	nuevo_reporte.open(nombre_archivo, std::ios::out);
+	std::queue <Paquete*> fila_paquetes = avl->obtener_todos_paquetes();
 
 	if (!nuevo_reporte.is_open()) {
 		std::cout << "No se pudo escribir el reporte, intente de nuevo." << std::endl;
 	}
 	else {
-		while (!fila.empty()) {
-			Paquete* paquete = fila.front();
+		while (!fila_paquetes.empty()) {
+			Paquete* paquete = fila_paquetes.front();
 			std::string fragil = "No";
 			if (paquete->get_contenido_fragil()) {
 				fragil = "Si";
 			}
 
 			nuevo_reporte << paquete->get_codigo_aduana() << "," << paquete->get_tipo_envio() << "," << paquete->get_numero_de_seguimiento() << "," << paquete->get_fecha_recepcion_aduana() << "," << paquete->get_precio_base() << "," <<
-				paquete->get_telefono_contacto() << "," << paquete->get_peso_paquete() << "," << paquete->get_dimension_paquete() << "," << fragil << "," << paquete->get_direccion() << "," << paquete->get_codigo_smt() << "," << 
+				paquete->get_telefono_contacto() << "," << paquete->get_peso_paquete() << "," << paquete->get_dimension_paquete() << "," << fragil << "," << paquete->get_direccion() << "," << paquete->get_codigo_smt() << "," <<
 				paquete->get_repartidor() << "," << paquete->get_tiempo_entrega();
 			nuevo_reporte << std::endl;
-			fila.pop();
+			
+			if (heap_o_abb) {
+				heap->insertar_paquete(paquete);
+			}
+			else {
+
+			}
+
+			fila_paquetes.pop();
 		}
 		nuevo_reporte.close();
 	}
 
-	if (avl->get_raiz() != nullptr) {
-		std::string fecha_hora_reporte = nombrearchivo_fecha[1];
-		std::string nombreArchivosReportes = "NombresReportes.txt";
-		std::ofstream archivoReportes;
-		archivoReportes.open(nombreArchivosReportes, std::ios::app);
-		if (archivoReportes.is_open()) {
-			archivoReportes << fecha_hora_reporte;
-			archivoReportes << std::endl;
-			archivoReportes.close();
+	std::string fecha_hora_reporte = nombrearchivo_fecha[1];
+	std::string nombreArchivosReportes = "NombresReportes.txt";
+	std::ofstream archivoReportes;
+	archivoReportes.open(nombreArchivosReportes, std::ios::app);
+	if (archivoReportes.is_open()) {
+		archivoReportes << fecha_hora_reporte;
+		archivoReportes << std::endl;
+		archivoReportes.close();
+	}
+	else {
+		std::cout << "Error: no se pudo abrir el archivo porque no existe, creando uno nuevo..." << std::endl;
+		std::ofstream nuevoArchivoReportes;
+		nuevoArchivoReportes.open("NombresReportes.txt", std::ios::out);
+		nuevoArchivoReportes.close();
+		std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
+	}
+}
+
+void Sistema::realizar_entregas() {
+	
+	if (hay_avl) {
+		if (avl->get_raiz() == nullptr) {
+			std::cout << "El arbol AVL de la sucursal esta vacio, intente de nuevo.";
+			return;
+		}else{
+			bool todos_con_repartidor = avl->paquetesConRepartidor();
+			if (todos_con_repartidor) {
+				if (hay_heap) {
+
+
+					//Falta averiguar qué hacer si ya existe un heap.
+
+
+
+				}
+				else {
+					heap = new Heap(100);
+					hay_heap = true;
+					reporte_eliminar_avl(true);
+					delete avl;
+					hay_avl = false;
+				}
+			}else{
+				std::cout << "No se puede realizar la entrega de los paquetes: hay paquetes en la sucursal sin repartidor. Intente de nuevo" << std::endl;
+			}
 		}
-		else {
-			std::cout << "Error: no se pudo abrir el archivo porque no existe, creando uno nuevo..." << std::endl;
-			std::ofstream nuevoArchivoReportes;
-			nuevoArchivoReportes.open("NombresReportes.txt", std::ios::out);
-			nuevoArchivoReportes.close();
-			std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
-		}
+	}
+	else {
+		std::cout << "El arbol AVL de la sucursal no existe, intente de nuevo." << std::endl;
 	}
 }
 
@@ -571,17 +632,30 @@ void Sistema::generar_reporte() {
 		std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
 	}
 
-	int* tiempo_cantidad_express= new int [2];
-	int* tiempo_cantidad_economico = new int[2];
-	int* tiempo_cantidad_gratis = new int[2];
 
-	avl->totalTiempoCantidadTipoEnvio("Express", tiempo_cantidad_express);
-	avl->totalTiempoCantidadTipoEnvio("Economico", tiempo_cantidad_economico);
-	avl->totalTiempoCantidadTipoEnvio("Gratis", tiempo_cantidad_gratis);
+	if (hay_avl) {
+		int* tiempo_cantidad_express = new int[2];
+		int* tiempo_cantidad_economico = new int[2];
+		int* tiempo_cantidad_gratis = new int[2];
+
+		tiempo_cantidad_express = avl->totalTiempoCantidadTipoEnvio("Express", tiempo_cantidad_express);
+		tiempo_cantidad_economico = avl->totalTiempoCantidadTipoEnvio("Economico", tiempo_cantidad_economico);
+		tiempo_cantidad_gratis = avl->totalTiempoCantidadTipoEnvio("Gratis", tiempo_cantidad_gratis);
 
 
 
 
+
+
+
+
+
+
+	}
+	else {
+		std::cout << "No se puede lista los codigos SMT de los paquetes con una entrega myor a 24 horas ni desplegar promedios de tiempo, ya que no existe el arbol AVL de Sucursal." << std::endl;
+	}
+	
 
 
 

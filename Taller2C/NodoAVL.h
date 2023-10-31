@@ -9,8 +9,8 @@ private:
 	NodoAVL* hijo_derecho;
 
 public:
-
 	NodoAVL(Paquete* paquete);
+	~NodoAVL();
 	void set_hijo_izquierdo(NodoAVL* hijo_izquierdo);
 	void set_hijo_derecho(NodoAVL* hijo_derecho);
 	NodoAVL* get_hijo_izquierdo();

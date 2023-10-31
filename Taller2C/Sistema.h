@@ -14,10 +14,9 @@ private:
 	Heap* heap;
 	std::vector <std::string> fechas_reporte;
 	int cantidad_reportes; 
-	bool abb_eliminado = false;
-	bool hay_avl;
-	bool avl_eliminado = false;
-	bool heap_eliminado = false;
+	bool hay_abb = false;
+	bool hay_avl = false;
+	bool hay_heap = false;
 
 public:
 	Sistema();
@@ -36,6 +35,7 @@ public:
 
 	void leer_reporte(std::string nombre_reporte);
 	std::string* obtener_fecha_actual();
+	void reporte_eliminar_avl(bool heap_o_abb);
 
 
 

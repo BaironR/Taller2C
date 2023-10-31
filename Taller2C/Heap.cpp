@@ -7,6 +7,10 @@ Heap::Heap(int tamanio_maximo)
 	arreglo_paquetes = new Paquete * [tamanio_maximo];
 }
 
+Heap::~Heap()
+{
+}
+
 void Heap::insertar_paquete(Paquete* paquete_agregar)
 {
 	if (cantidad_actual == tamanio_maximo) {
