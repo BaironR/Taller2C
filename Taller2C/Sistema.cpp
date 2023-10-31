@@ -23,6 +23,11 @@ void Sistema::menu_principal() {
 			//Bloque try que contiene el menú.
 			try {
 
+				if (hay_avl) {
+					NodoAVL* nodo = avl->get_raiz();
+					std::cout << nodo->get_paquete()->get_codigo_aduana() << std::endl;
+				}
+
 				//El usuario ingresa una opción (tipo string) que realiza la conversión a int luego.
 				std::string opcion;
 				std::cout <<
@@ -321,9 +326,15 @@ void Sistema::despacho_sucursal(){
 
 				std::queue<Paquete*> nodosABB = abb->retornar_ABB();
 				while (!nodosABB.empty()) {
-					avl->insertar(nodosABB.front());
+					Paquete* paquete = new Paquete(nodosABB.front()->get_codigo_aduana(), nodosABB.front()->get_tipo_envio(), 
+						nodosABB.front()->get_numero_de_seguimiento(), nodosABB.front()->get_fecha_recepcion_aduana(), nodosABB.front()->get_precio_base(), 
+						nodosABB.front()->get_telefono_contacto(), nodosABB.front()->get_peso_paquete(), nodosABB.front()->get_dimension_paquete(), 
+						nodosABB.front()->get_contenido_fragil(), nodosABB.front()->get_direccion(), nodosABB.front()->get_codigo_smt(), nodosABB.front()->get_repartidor(),
+						nodosABB.front()->get_tiempo_entrega());
+					avl->insertar(paquete);
 					nodosABB.pop();
 				}
+
 			}
 
 			delete abb;
