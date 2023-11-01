@@ -235,25 +235,27 @@ void Sistema::ingresar_envios() {
 	std::string linea;
 	int contador_linea = 1;
 
+	int sumatoria_valores = 0;
+
 	// Almacenar en ABB el contenido del archivo línea por línea
 	while (std::getline(archivo, linea)) {
+		
+		try{
 
-		std::stringstream stream(linea);
-		std::string codigo_aduana_string, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana, dimension_paquete, direccion, precio_base_string,
-			peso_paquete_string, telefono_contacto, contenido_fragil_string;
+			std::stringstream stream(linea);
+			std::string codigo_aduana_string, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana, dimension_paquete, direccion, precio_base_string,
+				peso_paquete_string, telefono_contacto, contenido_fragil_string;
 
-		std::getline(stream, codigo_aduana_string, ',');
-		std::getline(stream, tipo_envio, ',');
-		std::getline(stream, numero_de_seguimiento, ',');
-		std::getline(stream, fecha_recepcion_aduana, ',');
-		std::getline(stream, precio_base_string, ',');
-		std::getline(stream, telefono_contacto, ',');
-		std::getline(stream, peso_paquete_string, ',');
-		std::getline(stream, dimension_paquete, ',');
-		std::getline(stream, contenido_fragil_string, ',');
-		std::getline(stream, direccion, ',');
-
-		try {
+			std::getline(stream, codigo_aduana_string, ',');
+			std::getline(stream, tipo_envio, ',');
+			std::getline(stream, numero_de_seguimiento, ',');
+			std::getline(stream, fecha_recepcion_aduana, ',');
+			std::getline(stream, precio_base_string, ',');
+			std::getline(stream, telefono_contacto, ',');
+			std::getline(stream, peso_paquete_string, ',');
+			std::getline(stream, dimension_paquete, ',');
+			std::getline(stream, contenido_fragil_string, ',');
+			std::getline(stream, direccion, ',');
 
 			int codigo_aduana = std::stoi(codigo_aduana_string);
 			int precio_base = std::stoi(precio_base_string);
@@ -283,11 +285,40 @@ void Sistema::ingresar_envios() {
 				"", "", -1);
 
 			abb->insertar(paquete);
+			sumatoria_valores += precio_base;
 		}
 		catch (const std::invalid_argument& e) {
 			continue;
 		}
 	}
+
+	try
+	{
+		if (nombres_conjuntos_aduana.empty()) {
+			nombres_conjuntos_aduana.push_back(nombreArchivo);
+			valor_conjuntos_aduana.push_back(sumatoria_valores);
+		}
+		else {
+			bool archivo_encontrado = false;
+			for (int i = 0; i < nombres_conjuntos_aduana.size(); i++) {
+				if (nombres_conjuntos_aduana.at(i) == nombreArchivo) {
+					archivo_encontrado = true;
+				}
+
+			}
+			if (!archivo_encontrado) {
+				nombres_conjuntos_aduana.push_back(nombreArchivo);
+				valor_conjuntos_aduana.push_back(sumatoria_valores);
+			}
+		}
+	}
+	catch (const std::exception& e)
+	{
+
+	}
+
+
+
 
 	// Cerrar el archivo después de la lectura
 	archivo.close();
@@ -312,10 +343,10 @@ void Sistema::despacho_sucursal(){
 					Paquete* paquete = avl->buscar(nodosABB.front()->get_codigo_aduana());
 
 					if (paquete == nullptr) {
-						reporte_eliminar_avl(false);
+						reporte_eliminar_avl(2);
 						delete avl;
+						avl = nullptr;
 						hay_avl = false;
-
 						avl = new AVL();
 						hay_avl = true;
 
@@ -350,7 +381,6 @@ void Sistema::despacho_sucursal(){
 				}
 
 			}
-
 			delete abb;
 			abb = nullptr;
 			hay_abb = false;
@@ -393,6 +423,7 @@ void Sistema::asignar_repartidores() {
 
 
 				try {
+				
 				std::stringstream stream(linea);
 				std::string codigo_paquete_string, codigo_smt, repartidor, tiempo_entrega_string;
 
@@ -492,7 +523,13 @@ std::string* Sistema::obtener_fecha_actual()
 	return nombre_y_fecha;
 }
 
-void Sistema::reporte_eliminar_avl(bool heap_o_abb)
+
+//1: Heap
+//2: ABB
+//3: Eliminar al salir.
+
+
+void Sistema::reporte_eliminar_avl(int heap_abb_eliminar)
 {
 	std::string* nombrearchivo_fecha = obtener_fecha_actual();
 	std::ofstream nuevo_reporte;
@@ -505,6 +542,7 @@ void Sistema::reporte_eliminar_avl(bool heap_o_abb)
 	}
 	else {
 		while (!fila_paquetes.empty()) {
+
 			Paquete* paquete = new Paquete(fila_paquetes.front()->get_codigo_aduana(), fila_paquetes.front()->get_tipo_envio(),
 				fila_paquetes.front()->get_numero_de_seguimiento(), fila_paquetes.front()->get_fecha_recepcion_aduana(), fila_paquetes.front()->get_precio_base(),
 				fila_paquetes.front()->get_telefono_contacto(), fila_paquetes.front()->get_peso_paquete(), fila_paquetes.front()->get_dimension_paquete(),
@@ -516,15 +554,31 @@ void Sistema::reporte_eliminar_avl(bool heap_o_abb)
 				fragil = "Si";
 			}
 
+			std::string hay_repartidor = paquete->get_repartidor();
+			std::string hay_codigo_smt = paquete->get_codigo_smt();
+
+			if (hay_repartidor == "") {
+				hay_repartidor = "No tiene repartidor";
+			}
+
+			if (hay_codigo_smt == "") {
+				hay_codigo_smt = "No tiene codigo SMT";
+			}
+
 			nuevo_reporte << paquete->get_codigo_aduana() << "," << paquete->get_tipo_envio() << "," << paquete->get_numero_de_seguimiento() << "," << paquete->get_fecha_recepcion_aduana() << "," << paquete->get_precio_base() << "," <<
-				paquete->get_telefono_contacto() << "," << paquete->get_peso_paquete() << "," << paquete->get_dimension_paquete() << "," << fragil << "," << paquete->get_direccion() << "," << paquete->get_codigo_smt() << "," <<
-				paquete->get_repartidor() << "," << paquete->get_tiempo_entrega();
+				paquete->get_telefono_contacto() << "," << paquete->get_peso_paquete() << "," << paquete->get_dimension_paquete() << "," << fragil << "," << paquete->get_direccion() << "," << hay_codigo_smt << "," <<
+				hay_repartidor << "," << paquete->get_tiempo_entrega();
 			nuevo_reporte << std::endl;
 			
-			if (heap_o_abb) {
+			if (heap_abb_eliminar == 1) {
 				heap->insertar_paquete(paquete);
 			}
 			else {
+
+
+
+
+
 
 			}
 
@@ -565,18 +619,18 @@ void Sistema::realizar_entregas() {
 
 
 						//Falta averiguar qué hacer si ya existe un heap.
-
-
-
 					}
 					else {
 						int cantidad_nodos_avl = avl->cantidad_nodos();
 						heap = new Heap(cantidad_nodos_avl);
 						hay_heap = true;
-						reporte_eliminar_avl(true);
+						reporte_eliminar_avl(1);
 						delete avl;
 						hay_avl = false;
 					}
+
+
+					heap->imprimir_arreglo();
 				}
 				else {
 					std::cout << "No se puede realizar la entrega de los paquetes: hay paquetes en la sucursal sin repartidor. Intente de nuevo" << std::endl;
@@ -670,12 +724,12 @@ void Sistema::generar_reporte() {
 
 				if (fecha_a_coincidir == fecha_a_buscar) {
 					leer_reporte(fecha);
+					std::cout << "****************************" << std::endl;
 				}
-
-				std::cout << "****************************" << std::endl;
+				
 			}
 			catch (std::exception exception) {
-
+				std::cout << "Hubo un error de tipo " << exception.what() << ", intente de nuevo." << std::endl;
 			}
 		}
 
@@ -687,13 +741,85 @@ void Sistema::generar_reporte() {
 		std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
 	}
 
-	try {
-		if (hay_avl) {
-
-
+	try
+	{
+		if (nombres_conjuntos_aduana.empty()) {
+			std::cout << "No se ha leido ningun archivo con conjuntos de datos para la Aduana." << std::endl;
 		}
 		else {
-			std::cout << "No se puede lista los codigos SMT de los paquetes con una entrega myor a 24 horas ni desplegar promedios de tiempo, ya que no existe el arbol AVL de Sucursal." << std::endl;
+			for (int i = 0; i < nombres_conjuntos_aduana.size(); i++) {
+				std::cout << "Valor total para el conjunto de datos del archivo " << nombres_conjuntos_aduana[i] << ": $" << valor_conjuntos_aduana[i] << std::endl;
+			}
+			std::cout << std::endl;
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << "Ocurrio un error de tipo: " << e.what() << ". Intente de nuevo." << std::endl;
+		std::cout << std::endl;
+	}
+
+	try {
+		if (hay_avl) {
+			if (avl->get_raiz() != nullptr) {
+
+				std::cout << "Codigo SMT de paquetes con tiempo de entrega mayor a 24 horas (1440 minutos): " << std::endl;
+				std::queue <Paquete*> fila_smt_24horas = avl->paquetes_mayor_24_horas();
+
+				if (fila_smt_24horas.size() == 0) {
+					std::cout << "No hay paquetes con un tiempo de entrega mayor a 24 horas." << std::endl;
+				}
+				else {
+					while (!fila_smt_24horas.empty()) {
+						Paquete* paquete = fila_smt_24horas.front();
+						std::cout << "Paquete con el codigo SMT " << paquete->get_codigo_smt() << ", con un tiempo de entrega de " << paquete->get_tiempo_entrega() << " minutos." << std::endl;
+						fila_smt_24horas.pop();
+					}
+				}
+
+				std::cout << std::endl;
+
+				int cantidad_express = avl->cantidad_paquetes_tiempo_envio("Express");
+				int suma_tiempo_express = avl->suma_paquetes_tiempo_envio("Express");
+
+				int cantidad_economico = avl->cantidad_paquetes_tiempo_envio("Económico");
+				int suma_tiempo_economico = avl->suma_paquetes_tiempo_envio("Económico");
+
+				int cantidad_gratis = avl->cantidad_paquetes_tiempo_envio("Gratis");
+				int suma_tiempo_gratis = avl->suma_paquetes_tiempo_envio("Gratis");
+				
+
+				if (cantidad_express == 0) {
+					std::cout << "No hay ningun paquete con tipo de envio Express en la sucursal. " << std::endl;
+				}
+				else {
+					double promedio_express = ((suma_tiempo_express * 1.0)/ cantidad_express);
+					std::cout << "Hay un promedio de tiempo de entrega de " + std::to_string(promedio_express) + " minutos para un paquete con envio Express." << std::endl;
+				}
+
+				//REVISAR: BUSCAR TÉRMINOS CON TILDE (NO ENCUENTRA NINGÚN ECONÓMICO POR LA Ó).
+				if (cantidad_economico == 0) {
+					std::cout << "No hay ningun paquete con tipo de envio Economico en la sucursal. " << std::endl;
+				}
+				else {
+					double promedio_economico = ((suma_tiempo_economico * 1.0) / cantidad_economico);
+					std::cout << "Hay un promedio de tiempo de entrega de " + std::to_string(promedio_economico) + " minutos para un paquete con envio Economico." << std::endl;
+				}
+
+				if (cantidad_gratis == 0) {
+					std::cout << "No hay ningun paquete con tipo de envio Gratis en la sucursal. " << std::endl;
+				}
+				else {
+					double promedio_gratis = ((suma_tiempo_gratis * 1.0) / cantidad_gratis);
+					std::cout << "Hay un promedio de tiempo de entrega de " + std::to_string(promedio_gratis) + " minutos para un paquete con envio Gratis." << std::endl;
+				}
+			}
+			else {
+				std::cout << "El arbol AVL de la Sucursal esta vacio, por favor intente de nuevo." << std::endl;
+			}
+		}
+		else {
+			std::cout << "No se puede lista los codigos SMT de los paquetes con una entrega mayor a 24 horas ni desplegar promedios de tiempo, ya que no existe el arbol AVL de Sucursal." << std::endl;
 		}
 	}
 	catch (std::exception e) {
@@ -709,6 +835,8 @@ void Sistema::leer_reporte(std::string nombre_reporte){
 	std::ifstream reporte_a_leer(nombre_reporte, std::ios::in);
 
 	while (std::getline(reporte_a_leer, linea)) {
+
+		
 
 		std::stringstream stream(linea);
 		std::string codigo_aduana_string, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana, dimension_paquete, direccion, precio_base_string,
@@ -742,7 +870,7 @@ void Sistema::leer_reporte(std::string nombre_reporte){
 		std::cout << "Direccion: " << direccion << std::endl;
 		std::cout << "Codigo SMT: " << codigo_smt << std::endl;
 		std::cout << "Repartidor: " << repartidor << std::endl;
-		std::cout << "Tiempo de entrega: " << tiempo << std::endl;
+		std::cout << "Tiempo de entrega: " << tiempo << " minutos" << std::endl;
 	}
 
 	std::cout << "---------------------------------" << std::endl;

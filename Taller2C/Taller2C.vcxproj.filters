@@ -9,6 +9,7 @@
     <ClCompile Include="Paquete.cpp" />
     <ClCompile Include="Sistema.cpp" />
     <ClCompile Include="Taller2C.cpp" />
+    <ClCompile Include="NodoHeap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ABB.h" />
@@ -18,6 +19,7 @@
     <ClInclude Include="NodoAVL.h" />
     <ClInclude Include="Paquete.h" />
     <ClInclude Include="Sistema.h" />
+    <ClInclude Include="NodoHeap.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Aduana.txt" />

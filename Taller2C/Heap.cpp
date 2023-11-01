@@ -4,7 +4,7 @@ Heap::Heap(int tamanio_maximo)
 {
 	this->cantidad_actual = 0;
 	this->tamanio_maximo = tamanio_maximo;
-	arreglo_paquetes = new Paquete * [tamanio_maximo];
+	arreglo_nodos = new NodoHeap* [tamanio_maximo];
 }
 
 Heap::~Heap()
@@ -19,10 +19,10 @@ void Heap::insertar_paquete(Paquete* paquete_agregar)
 
 	this->cantidad_actual++;
 	int indice = cantidad_actual - 1;
-	arreglo_paquetes[indice] = paquete_agregar;
+	arreglo_nodos[indice] = new NodoHeap(paquete_agregar);
 
-	while (indice != 0 && arreglo_paquetes[get_padre(indice)]->get_tiempo_entrega() > arreglo_paquetes[indice]->get_tiempo_entrega()) {
-		std::swap(arreglo_paquetes[indice],arreglo_paquetes[get_padre(indice)]);
+	while (indice != 0 && arreglo_nodos[get_padre(indice)]->get_paquete()->get_tiempo_entrega() > arreglo_nodos[indice]->get_paquete()->get_tiempo_entrega()) {
+		std::swap(arreglo_nodos[indice],arreglo_nodos[get_padre(indice)]);
 		indice = get_padre(indice);
 	}
 }
@@ -37,16 +37,16 @@ void Heap::heapify_min(int indice)
 	int derecho = 2 * indice + 1;
 	int mas_pequenio = indice;
 
-	if (izquierdo < cantidad_actual && arreglo_paquetes[izquierdo] < arreglo_paquetes[mas_pequenio]) {
+	if (izquierdo < cantidad_actual && arreglo_nodos[izquierdo]->get_paquete()->get_tiempo_entrega() < arreglo_nodos[mas_pequenio]->get_paquete()->get_tiempo_entrega()) {
 		mas_pequenio = izquierdo;
 	}
 
-	if (derecho < cantidad_actual && arreglo_paquetes[derecho] < arreglo_paquetes[mas_pequenio]) {
+	if (derecho < cantidad_actual && arreglo_nodos[derecho]->get_paquete()->get_tiempo_entrega() < arreglo_nodos[mas_pequenio]->get_paquete()->get_tiempo_entrega()) {
 		mas_pequenio = derecho;
 	}
 
 	if (mas_pequenio != indice) {
-		std::swap(arreglo_paquetes[indice], arreglo_paquetes[mas_pequenio]);
+		std::swap(arreglo_nodos[indice], arreglo_nodos[mas_pequenio]);
 		heapify_min(mas_pequenio);
 	}
 }
@@ -78,7 +78,7 @@ int Heap::get_hijo_der(int indice)
 
 void Heap::imprimir_arreglo() {
 	for (int i = 0; i < this->cantidad_actual; i++) {
-		Paquete* paquete = arreglo_paquetes[i];
+		Paquete* paquete = arreglo_nodos[i]->get_paquete();
 
 		std::cout << paquete->get_codigo_aduana() << "-" << paquete->get_contenido_fragil() << "-" << paquete->get_tiempo_entrega() << std::endl;
 	}

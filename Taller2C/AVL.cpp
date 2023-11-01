@@ -25,6 +25,44 @@ int AVL::cantidad_nodos_private(NodoAVL* nodo)
     return 1 + cantidad_nodos_private(nodo->get_hijo_izquierdo()) + cantidad_nodos_private(nodo->get_hijo_derecho());
 }
 
+int AVL::suma_tiempo_envio_private(NodoAVL* nodoAVL, std::string tipo_envio)
+{
+    int tiempo = 0;
+
+    if (nodoAVL == nullptr) {
+        return tiempo;
+    }
+    
+    if (nodoAVL->get_paquete()->get_tipo_envio() == tipo_envio) {
+        tiempo = nodoAVL->get_paquete()->get_tiempo_entrega();
+
+        if (tiempo == -1) {
+            tiempo = 0;
+        }
+    }
+
+    return tiempo + suma_tiempo_envio_private(nodoAVL->get_hijo_izquierdo(), tipo_envio) +
+        suma_tiempo_envio_private(nodoAVL->get_hijo_derecho(), tipo_envio);
+}
+
+
+
+int AVL::cantidad_tiempo_envio_private(NodoAVL* nodoAVL, std::string tipo_envio)
+{
+    int contador = 0;
+
+    if (nodoAVL == nullptr) {
+        return contador;
+    }
+    
+    if (nodoAVL->get_paquete()->get_tipo_envio() == tipo_envio) {
+        contador++;
+    }
+
+    return contador + cantidad_tiempo_envio_private(nodoAVL->get_hijo_izquierdo(),tipo_envio) + 
+        cantidad_tiempo_envio_private(nodoAVL->get_hijo_derecho(), tipo_envio);
+}
+
 AVL::~AVL()
 {
     destruirAVLRecurs(this->raiz);
@@ -97,12 +135,6 @@ NodoAVL* AVL::get_raiz()
     return this->raiz;
 }
 
-int* AVL::totalTiempoCantidadTipoEnvio(std::string tipo_envio, int* totalcantidad)
-{
-    totalTiempoCantidadTipoEnvioPrivate(this->raiz, tipo_envio, totalcantidad);
-    return totalcantidad;
-}
-
 std::queue<Paquete*> AVL::paquetes_mayor_24_horas()
 {
     std::queue<Paquete*> fila_mayor_24Horas;
@@ -169,6 +201,15 @@ int AVL::cantidad_nodos()
     return cantidad_nodos_private(this->raiz);
 }
 
+int AVL::suma_paquetes_tiempo_envio(std::string tipo_envio)
+{
+    return suma_tiempo_envio_private(this->raiz, tipo_envio);
+}
+
+int AVL::cantidad_paquetes_tiempo_envio(std::string tipo_envio)
+{
+    return cantidad_tiempo_envio_private(this->raiz, tipo_envio);
+}
 
 NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete) {
 
@@ -177,35 +218,10 @@ NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete) {
     }
     else if (paquete->get_codigo_aduana() < nodo->get_paquete()->get_codigo_aduana()) {
         nodo->set_hijo_izquierdo(insertar_private(nodo->get_hijo_izquierdo(), paquete));
-
-        /*
-        if (get_altura_recursivo(nodo->get_hijo_izquierdo(), 0) - get_altura_recursivo(nodo->get_hijo_derecho(), 0) == 2) {
-            if (paquete->get_codigo_aduana() < nodo->get_hijo_izquierdo()->get_paquete()->get_codigo_aduana()) {
-                nodo = rotacion_rr(nodo);
-
-            } else {
-                nodo = rotacion_lr(nodo);
-            }
-        }
-        */
-
     }
     else if (paquete->get_codigo_aduana() > nodo->get_paquete()->get_codigo_aduana()) {
 
         nodo->set_hijo_derecho(insertar_private(nodo->get_hijo_derecho(), paquete));
-
-        /*
-        if (get_altura_recursivo(nodo->get_hijo_derecho(), 0) - get_altura_recursivo(nodo->get_hijo_derecho(), 0) == 2){
-            if (paquete->get_codigo_aduana() > nodo->get_hijo_derecho()->get_paquete()->get_codigo_aduana()) {
-
-                nodo = rotacion_ll(nodo);
-
-            } else {
-                nodo = rotacion_rl(nodo);
-            }
-        }
-        */
-
     }
     else {
         return nodo;
@@ -251,22 +267,6 @@ Paquete* AVL::buscar_private(NodoAVL* nodo, int codigo_paquete){
     return nodo->get_paquete();
 }
 
-void AVL::totalTiempoCantidadTipoEnvioPrivate(NodoAVL* nodo, std::string tipo_envio, int* totalcantidad)
-{
-    if (nodo == nullptr) {
-        return;
-    }
-
-    if (nodo->get_paquete()->get_tipo_envio() == tipo_envio) {
-        totalcantidad[0] += nodo->get_paquete()->get_tiempo_entrega();
-        totalcantidad[1]++;
-        return;
-    }
-
-    totalTiempoCantidadTipoEnvioPrivate(nodo->get_hijo_izquierdo(), tipo_envio, totalcantidad);
-    totalTiempoCantidadTipoEnvioPrivate(nodo->get_hijo_derecho(), tipo_envio, totalcantidad);
-}
-
 Paquete* AVL::buscar(int codigo_paquete) {
     int codigo_aduana = codigo_paquete;
     NodoAVL* copia_raiz = this->raiz;
@@ -280,7 +280,7 @@ void AVL::buscar_paquetes_mayor_24horas(NodoAVL* nodo, std::queue<Paquete*>& col
         return;
     }
 
-    if (nodo->get_paquete()->get_tiempo_entrega() > 1600) {
+    if (nodo->get_paquete()->get_tiempo_entrega() > 1440) {
         cola.push(nodo->get_paquete());
     }
 

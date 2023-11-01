@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +145,7 @@
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="NodoABB.cpp" />
     <ClCompile Include="NodoAVL.cpp" />
+    <ClCompile Include="NodoHeap.cpp" />
     <ClCompile Include="Paquete.cpp" />
     <ClCompile Include="Sistema.cpp" />
     <ClCompile Include="Taller2C.cpp" />
@@ -154,6 +156,7 @@
     <ClInclude Include="Heap.h" />
     <ClInclude Include="NodoABB.h" />
     <ClInclude Include="NodoAVL.h" />
+    <ClInclude Include="NodoHeap.h" />
     <ClInclude Include="Paquete.h" />
     <ClInclude Include="Sistema.h" />
   </ItemGroup>

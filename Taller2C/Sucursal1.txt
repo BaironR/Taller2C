@@ -1,6 +1,6 @@
 Código Paquete,Código SMT,Repartidor Asignado,Tiempo de entrega
 47807551,880036843948,Edgardo Ortiz,120
-47394229,888492615408,Miguel Araya,150
+47394229,888492615408,Miguel Araya,1500
 47010161,888817915585,Matías Orellana,90
 47809561,891267499712,Ana Pérez,135
 47394230,895103672848,Daniel Rodríguez,110

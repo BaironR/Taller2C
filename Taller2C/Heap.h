@@ -1,10 +1,11 @@
 #pragma once
 #include "Paquete.h"
+#include "NodoHeap.h"
 
 class Heap
 {
 private:
-	Paquete** arreglo_paquetes;
+	NodoHeap** arreglo_nodos;
 	int tamanio_maximo;
 	int cantidad_actual;
 

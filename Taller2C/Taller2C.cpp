@@ -5,8 +5,8 @@
 #include "Sistema.h"
 
 int main() {
-
     try {
+
         Sistema* sistema = new Sistema(); //Inicialización del sistema.
         sistema->menu_principal(); //Iniciar el menu.
     }
