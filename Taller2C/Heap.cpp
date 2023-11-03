@@ -62,16 +62,28 @@ Paquete* Heap::extraer_paquete()
 	if (cantidad_actual == 1) {
 		this->cantidad_actual--;
 		Paquete* paquete_raiz = arreglo_nodos[0]->get_paquete();
+
+		Paquete* nuevo_paquete = new Paquete(paquete_raiz->get_codigo_aduana(), paquete_raiz->get_tipo_envio(),
+			paquete_raiz->get_numero_de_seguimiento(), paquete_raiz->get_fecha_recepcion_aduana(), paquete_raiz->get_precio_base(),
+			paquete_raiz->get_telefono_contacto(), paquete_raiz->get_peso_paquete(), paquete_raiz->get_dimension_paquete(), paquete_raiz->get_contenido_fragil(),
+			paquete_raiz->get_direccion(),paquete_raiz->get_codigo_smt(),paquete_raiz->get_repartidor(),paquete_raiz->get_tiempo_entrega());
+
 		delete arreglo_nodos[0];
-		return paquete_raiz;
+		return nuevo_paquete;
 	}
 
 	Paquete* paquete_raiz = arreglo_nodos[0]->get_paquete();
+
+	Paquete* nuevo_paquete = new Paquete(paquete_raiz->get_codigo_aduana(), paquete_raiz->get_tipo_envio(),
+		paquete_raiz->get_numero_de_seguimiento(), paquete_raiz->get_fecha_recepcion_aduana(), paquete_raiz->get_precio_base(),
+		paquete_raiz->get_telefono_contacto(), paquete_raiz->get_peso_paquete(), paquete_raiz->get_dimension_paquete(), paquete_raiz->get_contenido_fragil(),
+		paquete_raiz->get_direccion(), paquete_raiz->get_codigo_smt(), paquete_raiz->get_repartidor(), paquete_raiz->get_tiempo_entrega());
+
 	delete arreglo_nodos[0];
 	arreglo_nodos[0] = arreglo_nodos[cantidad_actual-1];
 	this->cantidad_actual--;
 	heapify_min(0);
-	return paquete_raiz;
+	return nuevo_paquete;
 }
 
 int Heap::get_padre(int indice)
@@ -94,4 +106,9 @@ void Heap::imprimir_arreglo() {
 		Paquete* paquete = arreglo_nodos[i]->get_paquete();
 		std::cout << paquete->get_codigo_aduana() << "-" << paquete->get_contenido_fragil() << "-" << paquete->get_tiempo_entrega() << std::endl;
 	}
+}
+
+int Heap::get_cantidad_actual()
+{
+	return this->cantidad_actual;
 }

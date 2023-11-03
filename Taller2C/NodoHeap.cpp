@@ -1,5 +1,10 @@
 #include "NodoHeap.h"
 
+NodoHeap::~NodoHeap()
+{
+	delete paquete;
+}
+
 NodoHeap::NodoHeap(Paquete* paquete)
 {
 	this->paquete = paquete;

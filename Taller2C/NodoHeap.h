@@ -8,6 +8,7 @@ private:
 	NodoHeap* nodo_derecho;
 
 public:
+	~NodoHeap();
 	NodoHeap(Paquete* paquete);
 	NodoHeap* get_nodo_izquierdo();
 	NodoHeap* get_nodo_derecho();

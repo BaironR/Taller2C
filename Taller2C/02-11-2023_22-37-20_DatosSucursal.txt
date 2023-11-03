@@ -1,0 +1,15 @@
+47394236,Gratis,N/A,01-05-2023,48500,56912345675,157,47x47x47,Si,Cap. Carlos Condell 8,No tiene codigo SMT,No tiene repartidor,-1
+47010169,Economico,EM710249873FR,12-11-2022,35000,56987654329,192,42x42x42,Si,Uribe 813-761,No tiene codigo SMT,No tiene repartidor,-1
+47010167,Economico,US624789325CN,18-11-2022,36000,56987654327,194,44x44x44,Si,Uribe 811-759,No tiene codigo SMT,No tiene repartidor,-1
+47010166,Economico,EZ431870625FR,20-11-2022,36500,56987654326,195,45x45x45,No,Uribe 810-758,No tiene codigo SMT,No tiene repartidor,-1
+47010168,Economico,WG158209734US,15-11-2022,35500,56987654328,193,43x43x43,No,Uribe 812-760,No tiene codigo SMT,No tiene repartidor,-1
+47394234,Gratis,N/A,21-04-2023,49500,56912345673,155,45x45x45,Si,Cap. Carlos Condell 6,No tiene codigo SMT,No tiene repartidor,-1
+47010170,Economico,VA504362198US,09-11-2022,34500,56987654330,191,41x41x41,No,Uribe 814-762,No tiene codigo SMT,No tiene repartidor,-1
+47394235,Gratis,N/A,26-04-2023,49000,56912345674,156,46x46x46,No,Cap. Carlos Condell 7,No tiene codigo SMT,No tiene repartidor,-1
+47807556,Express,NX572048371JP,05-10-2023,46000,56948873079,105,36x36x36,Si,Almte. Juan Jose Latorre 2668,No tiene codigo SMT,No tiene repartidor,-1
+47394238,Gratis,N/A,11-05-2023,47500,56912345677,159,49x49x49,Si,Cap. Carlos Condell 10,No tiene codigo SMT,No tiene repartidor,-1
+47394237,Gratis,N/A,06-05-2023,48000,56912345676,158,48x48x48,No,Cap. Carlos Condell 9,No tiene codigo SMT,No tiene repartidor,-1
+47807555,Express,IR856209743DE,30-09-2023,45000,56948873078,106,35x35x35,No,Almte. Juan Jose Latorre 2667,No tiene codigo SMT,No tiene repartidor,-1
+47807558,Express,YT456798042JP,15-10-2023,48000,56948873081,103,38x38x38,Si,Almte. Juan Jose Latorre 2670,No tiene codigo SMT,No tiene repartidor,-1
+47807557,Express,FD942653019DE,10-10-2023,47000,56948873080,104,37x37x37,No,Almte. Juan Jose Latorre 2675,No tiene codigo SMT,No tiene repartidor,-1
+47807559,Express,KL920153476DE,20-10-2023,49000,56948873082,102,39x39x39,No,Almte. Juan Jose Latorre 2671,No tiene codigo SMT,No tiene repartidor,-1
