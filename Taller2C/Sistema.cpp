@@ -7,11 +7,24 @@
 #include <fstream>
 #include <sstream>
 
+
+/*
+Constructor de la clase sistema.
+Todos los árboles se inicializan en valor nulo.
+*/
 Sistema::Sistema() {
 	abb = nullptr;
 	avl = nullptr;
 	heap = nullptr;
 }
+
+
+/*
+Método del menú principal.
+Mediante ciclos while, se accede al menú principal y los submenús de aduana y sucursal.
+Se utilizan cláusulas try y catch, para evitar la caída del programa al ingresar a un valor no válido.
+Al salir del programa, se eliminan los árboles ABB y AVL (se crea un reporte), para liberar memoria.
+*/
 
 void Sistema::menu_principal() {
 
@@ -319,6 +332,22 @@ void Sistema::ingresar_envios() {
 	std::cout << "Archivo leido con exito." << std::endl;
 }
 
+
+/*
+Método de despacho a sucursal.
+Se comprueba primero la existencia de un árbol ABB en la aduana. Si no existe, se despliega un mensaje de error.
+En cambio, si existe, primero se comprueba que la raíz no es nula. En el caso de que sea nula, se despliega otro
+mensaje de error indicando que el árbol está vacío. Pero si hay elementos en el ABB, se comprueba si existe algún
+AVL anterior o no. Si ya existe un AVL anterior, se realiza una búsqueda de cada uno de los paquetes obtenidos
+en la fila retornada del ABB, con todos los paquetes del árbol. Si al menos un dato no existe en el AVL, significa
+que es un dato nuevo. Se genera un reporte del AVL actual, se elimina y variable booleana de hay_avl cambia a false.
+En ambos casos, la inserción al AVL se produce de la misma forma: a partir de la fila retornada del método retornar ABB, 
+y se insertan a medida que se va vaciando el AVL. Luego, se elimina el ABB, se vuelve nulo, y la variable de hay_abb se cambia a false.
+*/
+
+
+
+
 void Sistema::despacho_sucursal(){
 
 	//Si existe un árbol ABB, entonces se comprueba si está vacía o si hay paquetes en él.
@@ -385,6 +414,24 @@ void Sistema::despacho_sucursal(){
 
 //...............  Menu sucursal ...............//
 
+/*
+Método de asignar repartidores.
+Primero se comprueba si existe un AVL ya en el sistema. Si no, se despliega un mensaje de error. En caso
+de que exista pero esté vacío (raíz == null), se despliega otro mensaje de error. Si hay datos presentes
+en el AVL, se pide al usuario un nombre de archivo de texto a leer (que contiene la información adicional de
+la sucursal). Con el objeto ifstream, usando el nombre del archivo, se abre. Se despliega un mensaje de error si 
+no se pudo abrir el archivo (no existe). En caso de que sí se abra, mientras se obtenga una línea no vacía en el 
+archivo, se leen los datos, separando las comas (mediante una variable stringstream), y asignando valores a cada
+variable para los paquetes (código SMT, el código de paquete, el repartidor y el tiempo de entrega en string).
+Se realizan conversiones de string a int para el tiempo de entrega y el código de paquete.
+Luego, se busca el paquete con su correspondiente código de paquete en el AVL. Si el paquete retornado existe (no es nulo), 
+se asignan sus valores de repartidor, tiempo y código SMT. Todo está encerrado en cláusulas try y catch. Y se cierra
+el archivo, finalmente.
+*/
+
+
+
+
 void Sistema::asignar_repartidores() {
 	std::cout << "Asignar repartidores" << std::endl;
 
@@ -438,13 +485,29 @@ void Sistema::asignar_repartidores() {
 			// Cerrar el archivo después de la lectura.
 			archivo.close();
 			std::cout << "Archivo de sucursal leido con exito." << std::endl;
-	}else {
-		std::cout << "No hay ningun paquete disponible en el arbol AVL, intentelo de nuevo." << std::endl;
+		} else {
+			std::cout << "No hay ningun paquete disponible en el arbol AVL, intentelo de nuevo." << std::endl;
+		}
+	} else {
+		std::cout << "No existe ningun arbol AVL para asignar repartidores, intente de nuevo." << std::endl;
 	}
-}else {
-	std::cout << "No existe ningun arbol AVL para asignar repartidores, intente de nuevo." << std::endl;
 }
-}
+
+/*
+Método de obtener fecha actual.
+Se crea un vector que almacene el nombre del archivo en la casilla 0, y la fecha en la casilla 1.
+En el caso de que exista un AVL, se obtiene la hora y día actual local (con la estructura tm hora, la variable
+time_t, y localtime_s). Para el día, mes, año, hora, minuto y segundo se realizan conversiones necesarias de int a 
+string, para almacenar el nombre del archivo y fecha actual. Se realizan otras conversiones, por ejemplo, si el día
+es menor al valor 10, para agregar un 0 atrás, o también con el año (se retorna la cantidad de años desde 1900, y por esto
+se suman 1900 al valor del año).
+
+Lo mismo aplica para la hora, minuto, y segundo. Luego, se forma una cadena a partir de concatenar todos los datos en string
+del día y la hora, y agregando "_DatosSucursal.txt" para el nombre del reporte.
+Se retorna el vector inicializado para almacenar estas cadenas de texto, con los valores modificados.
+*/
+
+
 
 std::string* Sistema::obtener_fecha_actual()
 {
@@ -497,9 +560,6 @@ std::string* Sistema::obtener_fecha_actual()
 
 		std::string fecha_reporte = dia_string + "-" + mes_string + "-" + anio_string + "_" + hora_string + "-" + min_string + "-" + segun_string;
 		std::string nombre_archivo = fecha_reporte + "_DatosSucursal.txt";
-		std::cout << nombre_archivo << std::endl;
-		std::cout << fecha_reporte << std::endl;
-
 
 		nombre_y_fecha[0] = nombre_archivo;
 		nombre_y_fecha[1] = fecha_reporte;
@@ -516,6 +576,28 @@ std::string* Sistema::obtener_fecha_actual()
 //2: ABB
 //3: Eliminar al salir.
 
+
+
+/*
+Método de crear reporte y eliminar el AVL.
+Este método recibe como parámetro una variable entera, que permite diferenciar el uso del método (para
+rellenar un heap, eliminar un AVL anterior para crear otro nuevo, o eliminar al salir de la aplicación).
+
+Primero se obtiene la fecha actual (con el método obtener fecha actual), para crear el nuevo reporte.
+Luego, para proceder a la eliminación del AVL, se recuperan todos los paquetes del AVL actual, a partir
+de una queue retornada por el método obtener todos los paquetes. Si el archivo se pudo abrir, se realiza un ciclo
+mientras la queue retornada no se acabe.
+
+Se crean nuevos paquetes (con nuevas referencias), a partir de los datos del primer paquete de la fila. En el caso
+de que se deba insertar el paquete a un heap, se inserta el nuevo paquete dentro del heap. A partir de ciertos
+valores, se escriben cadenas de texto para mejorar la lectura de los reportes.
+Por ejemplo, en el caso de que se tenga o no se tenga un repartidor asignado al paquete.
+Cada uno de los datos se escriben por una línea del archivo, separados por comas. Finalmente, se destruye el paquete
+en el frente de la fila, mientras la fila no esté vacía. Finalmente, se cierra el archivo y se despliega un mensaje de feedback.
+
+Luego, en el archivo de los nombres de reportes, se almacena la fecha actual con la hora (también obtenida con el método
+obtener fecha actual), para almacenar la nueva fecha en el archivo de nombres de reportes. Si no existe ese archivo, se crea.
+*/
 
 void Sistema::reporte_eliminar_avl(int heap_abb_eliminar)
 {
@@ -561,12 +643,11 @@ void Sistema::reporte_eliminar_avl(int heap_abb_eliminar)
 			if (heap_abb_eliminar == 1) {
 				heap->insertar_paquete(paquete);
 			}
-			else {
-			}
 
 			fila_paquetes.pop();
 		}
 		nuevo_reporte.close();
+		std::cout << "Reporte generado con exito." << std::endl;
 	}
 
 	std::string fecha_hora_reporte = nombrearchivo_fecha[1];
@@ -586,6 +667,21 @@ void Sistema::reporte_eliminar_avl(int heap_abb_eliminar)
 		std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
 	}
 }
+
+/*
+Método de realizar entregas.
+El traspaso de todos los paquetes al heap, para su consiguiente reporte y eliminación.
+Primero se comprueba si hay un AVL activo, y a su vez, si no está vacía. En este último caso, se comprueba
+si todos los paquetes en el AVL poseen un repartidor. Si al menos uno no posee repartidor, no se puede proceder
+a la entrega de paquetes. En el caso contrario, se realiza la entrega de paquetes.
+
+Se inicializa el heap, a partir de la cantdad de nodos que hay en el AVL actual, se genera el reporte antes de eliminar
+el AVL (llamando al método de reportes, con el código 1 para insertar en el heap).
+El heap retornará el paquete que se encuentre en su primer espacio (el espacio raíz, con menor tiempo de envío), y a su vez, 
+el heap elimina el nodo presente en la raíz, mientras la cantdad actual de datos en el heap sea mayor a 0.
+
+Finalmente, se elimina el heap, y se designa en null.
+*/
 
 void Sistema::realizar_entregas() {
 	try {
@@ -608,7 +704,7 @@ void Sistema::realizar_entregas() {
 					std::cout << "Realizando entregas..." << std::endl;
 					std::cout << std::endl;
 					
-					//heap->imprimir_arreglo();
+				
 
 					while (heap->get_cantidad_actual() > 0) {
 						Paquete* paquete = heap->extraer_paquete();
@@ -632,6 +728,24 @@ void Sistema::realizar_entregas() {
 	}
 	
 }
+
+/*
+Método para generar reportes.
+Primeramente, el usuario ingresa una fecha para buscar y desplegar todos los reportes de esa fecha en específico.
+Se realizan los ajustes respectivos para el día y mes (si es menor a 10), y el año. Se poseen cláusulas de tipo try
+y catch, para capturar errores. Todas estas cadenas se concatenan en una sola, como la "fecha a buscar".
+
+Luego de esto, a partir de la cadena formada de la fecha, se busca esa fecha en el archivo de nombres de reportes.
+Si el archivo existe y se abrió correctamente, por cada línea se lee la fecha que está presente ahí.
+Mediante un ciclo for, se crea una cadena de texto nueva para hacer coincidir únicamente la fecha de creación (un total
+de 10 caracteres, asumiendo un año superior a 999, considerando los guiones entre día, mes y año).
+
+Si la "fecha a coincidir", coincide con la cadena de "fecha a buscar" (es decir, existe el registro de un archivo con
+esa fecha), se abre el archivo con ese nombre completo (fecha y hora, con el método leer_reporte), y así hasta acabar
+el archivo de nombres de reportes. Si no existe, se crea uno nuevo con el nombre "NombresReportes.txt".
+
+
+*/
 
 void Sistema::generar_reporte() {
 
@@ -717,7 +831,6 @@ void Sistema::generar_reporte() {
 				std::cout << "Hubo un error de tipo " << exception.what() << ", intente de nuevo." << std::endl;
 			}
 		}
-
 	}else{
 		std::cout << "Error: no se pudo abrir el archivo porque no existe, creando uno nuevo..." << std::endl;
 		std::ofstream nuevoArchivoReportes;
@@ -828,6 +941,16 @@ void Sistema::generar_reporte() {
 	}
 
 }
+
+
+/*
+Método de leer reporte.
+Este método recibe por parámetro el nombre del reporte a leer.
+Se agrega la cadena "_DatosSucursal.txt", para abrir el archivo con la variable ifstream.
+Cuando se abra el archivo, mediante la variable de tipo stringstream se reciben todos los datos de cada paquete, 
+separando mediante comas. Si hay un tiempo de valor -1, es porque no se definió un tiempo de entrega.
+Todos los datos de cada paquete se despliegan por pantalla.
+*/
 
 void Sistema::leer_reporte(std::string nombre_reporte){
 	try
