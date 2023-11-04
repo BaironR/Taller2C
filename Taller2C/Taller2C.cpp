@@ -1,8 +1,13 @@
 // Taller2C.cpp : Este archivo contiene la función "main". La ejecución del programa comienza y termina ahí.
-//
 
 #include <iostream>
 #include "Sistema.h"
+
+/*
+El main del programa.
+Se inicializa el sistema, y se ejecuta el menú principal.
+Está con un cláusula try y catch, para evitar los errores.
+*/
 
 int main() {
     try {

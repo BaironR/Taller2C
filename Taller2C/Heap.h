@@ -18,7 +18,6 @@ public:
 	int get_padre(int indice);
 	int get_hijo_izq(int indice);
 	int get_hijo_der(int indice);
-	void imprimir_arreglo();
 	int get_cantidad_actual();
 };
 

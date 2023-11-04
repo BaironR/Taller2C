@@ -222,8 +222,32 @@ void Sistema::menu_principal() {
 
 //...............  Menu aduana ...............//
 
+
+
+/*
+Método de ingresar envíos.
+Si no existe un ABB al ingresar este método, se crea uno nuevo. En caso contrario, se sigue ampliando el ABB 
+mientras se lean más archivos. El usuario ingresa por teclado el nombre del archivo a leer (puede ingresar varios), para 
+abrirlo con una variable ifstream. Si no existe el archivo (no se abre), se despliega un mensaje de error. 
+
+En caso contrario, mientras haya una línea en el archivo al momento de leerlo, se obtienen los datos de cada línea, con
+una variable stringstream. Se definen todos los atributos necesarios de los paquetes en la aduana (a excepción del repartidor,
+código SMT y tiempo de entrega), y en cada línea del archivo, se separan todos los valores delimitados por comas, para asignarlo
+a cada variable. Se realiza la conversión de tipo string a int, para el código de aduana/paquete, el peso del paquete y el precio base.
+También, se eliminan los espacios del campo de contenido frágil, y dependiendo si es frágil o no, se define la variable booleana de
+contenido frágil (true/false). Se crea un nuvo paquete, y se inserta en el ABB.
+
+Durante a lectura de archivo, se tiene una variable entera con la sumatoria de los precios base, que aumenta hasta terminar de leer
+el archivo. Luego, se utilizan los vectores de nombres de archivo de aduana y la suma de valores de los archivos. Aquí se insertan 
+los nombres de los archivos de aduana, para desplegarlos al generar los reportes. El nombre del archivo y la suma se insertan, solo
+si el vector de nombres está vacío si no existe en el vector, para evitar repeticiones.
+
+Al terminar, se cierra el archivo.
+*/
+
 void Sistema::ingresar_envios() {
 
+	//Si no existe un ABB, se crea y se deja en claro que existe con una variable booleana.
 	if (hay_abb == false) {
 		abb = new ABB();
 		hay_abb = true;
@@ -344,8 +368,6 @@ que es un dato nuevo. Se genera un reporte del AVL actual, se elimina y variable
 En ambos casos, la inserción al AVL se produce de la misma forma: a partir de la fila retornada del método retornar ABB, 
 y se insertan a medida que se va vaciando el AVL. Luego, se elimina el ABB, se vuelve nulo, y la variable de hay_abb se cambia a false.
 */
-
-
 
 
 void Sistema::despacho_sucursal(){
@@ -581,7 +603,7 @@ std::string* Sistema::obtener_fecha_actual()
 /*
 Método de crear reporte y eliminar el AVL.
 Este método recibe como parámetro una variable entera, que permite diferenciar el uso del método (para
-rellenar un heap, eliminar un AVL anterior para crear otro nuevo, o eliminar al salir de la aplicación).
+rellenar un heap (1), eliminar un AVL anterior para crear otro nuevo (2), o eliminar al salir de la aplicación (3)).
 
 Primero se obtiene la fecha actual (con el método obtener fecha actual), para crear el nuevo reporte.
 Luego, para proceder a la eliminación del AVL, se recuperan todos los paquetes del AVL actual, a partir
@@ -745,6 +767,18 @@ esa fecha), se abre el archivo con ese nombre completo (fecha y hora, con el mét
 el archivo de nombres de reportes. Si no existe, se crea uno nuevo con el nombre "NombresReportes.txt".
 
 
+Para el valor total de cada conjunto de datos en todos los archivos de Aduana, se usa el vector dinámico de nombres de archivos
+de Aduana, junto con el otro vector que almacena los valores enteros del total. Si el vector de nombres está vacío, se despliega
+que no se ha leído ningún archivo de aduana hasta el momento. En caso contrario, se despliegan todos los nombres de los archivos
+de Aduana con su respectivo valor base total.
+
+Ahora, se despliegan 2 estadísticas, que requieren de tener un AVL de Sucursal activo. En el caso de que no haya un AVL activo, se despliega
+un mensaje de error. Si hay un AVL pero está vacío, también. En el caso contrario (hay un AVL con datos), se obtiene una queue con todos los
+paquetes cuyo tiempo de entrega sea mayor a 1440 minutos (equivalente a 24 horas, 1 día), desplegando los códigos SMT, y se realiza el conteo de la cantidad de paquetes con
+un tipo de envío específico (Económico, Gratis y Express) con su suma total de tiempo de envío, para desplegar por pantalla su promedio de tiempo.
+Al desplegar el promedio, si hay paquetes (cantidad mayor a 0), pero el promedio resulta 0, es porque no hay tiempo definido para ningún paquete
+de ese tipo (los tiempos de envío están en -1). También se considera si no hay paquetes con un tipo de envío, o si no hay paquetes con un tiempo
+den entrega mayor a 24 horas.
 */
 
 void Sistema::generar_reporte() {
@@ -877,13 +911,13 @@ void Sistema::generar_reporte() {
 
 				std::cout << std::endl;
 
-				int cantidad_express = avl->cantidad_paquetes_tiempo_envio("Express");
+				int cantidad_express = avl->cantidad_paquetes_tipo_envio("Express");
 				int suma_tiempo_express = avl->suma_paquetes_tiempo_envio("Express");
 
-				int cantidad_economico = avl->cantidad_paquetes_tiempo_envio("Economico");
+				int cantidad_economico = avl->cantidad_paquetes_tipo_envio("Economico");
 				int suma_tiempo_economico = avl->suma_paquetes_tiempo_envio("Economico");
 
-				int cantidad_gratis = avl->cantidad_paquetes_tiempo_envio("Gratis");
+				int cantidad_gratis = avl->cantidad_paquetes_tipo_envio("Gratis");
 				int suma_tiempo_gratis = avl->suma_paquetes_tiempo_envio("Gratis");
 				
 
@@ -900,7 +934,6 @@ void Sistema::generar_reporte() {
 					}
 				}
 
-				//REVISAR: BUSCAR TÉRMINOS CON TILDE (NO ENCUENTRA NINGÚN ECONÓMICO POR LA Ó).
 				if (cantidad_economico == 0) {
 					std::cout << "No hay ningun paquete con tipo de envio Economico en la sucursal. " << std::endl;
 				}
