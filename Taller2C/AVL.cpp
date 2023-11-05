@@ -382,9 +382,6 @@ NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete) {
 
         nodo->set_hijo_derecho(insertar_private(nodo->get_hijo_derecho(), paquete));
     }
-    else {
-        return nodo;
-    }
 
     nodo->set_altura(1 + (int) (std::fmax(obtener_altura(nodo->get_hijo_izquierdo()), obtener_altura(nodo->get_hijo_derecho()))));
     int factor_balance = factor_de_balance(nodo);
