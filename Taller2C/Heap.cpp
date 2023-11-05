@@ -43,7 +43,7 @@ void Heap::insertar_paquete(Paquete* paquete_agregar)
 		return;
 	}
 
-	// Se inserta el paquete al final del arreglo
+	// Se inserta el paquete al final del arreglo, y se modifica la cantidad actual.
 	this->cantidad_actual++;
 	int indice = cantidad_actual - 1;
 	arreglo_nodos[indice] = new NodoHeap(paquete_agregar);
@@ -74,6 +74,7 @@ Recursivamente, se compara hacia abajo, con sus otros hijos, para que se cumpla 
 
 void Heap::heapify_min(int indice)
 {
+	//Índices de hijo izquierdo, derecho, y el índice del más pequeño, inicializado como el índice padre.
 	int izquierdo = get_hijo_izq(indice);
 	int derecho = get_hijo_der(indice);
 	int mas_pequenio = indice;

@@ -20,15 +20,33 @@ class Sistema {
 	*/
 
 private:
+
+	/*
+	Variables privadas del Sistema:
+	El árbol binario de búsqueda (ABB), el árbol binario de búsqueda balanceado (AVL),
+	el min heap, variables booleanas para comprobar si existe el ABB y AVL, vector de strings
+	para almacenar los nombres de los archivos de aduana, y vector de enteros que almacena el valor
+	total base leído en un archivo de aduana específico.
+	*/
+
 	ABB* abb;
 	AVL* avl;
-	Heap* heap;
+	Heap* min_heap;
 	bool hay_abb = false;
 	bool hay_avl = false;
 	std::vector <std::string> nombres_conjuntos_aduana;
 	std::vector <int> valor_conjuntos_aduana;
 
 public:
+
+	/*
+	 Métodos públicos del sistema.
+	 Constructor del sistema, menú principal, el despacho a sucursal, asignar repartidores, realizar las entregas,
+	 generar reportes, leer un reporte, obtener la fecha actual, y crear un reporte al eliminar el AVL.
+	*/
+
+
+
 	Sistema();
 	void menu_principal();
 

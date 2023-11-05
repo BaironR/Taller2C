@@ -15,7 +15,7 @@ Todos los árboles se inicializan en valor nulo.
 Sistema::Sistema() {
 	abb = nullptr;
 	avl = nullptr;
-	heap = nullptr;
+	min_heap = nullptr;
 }
 
 
@@ -55,6 +55,8 @@ void Sistema::menu_principal() {
 				if (opcionInt == 3) {
 
 					std::cout << "Programa finalizado, hasta luego." << std::endl;
+
+					//Si hay ABB o AVL, se libera su memoria al finalizar el programa.
 
 					if (hay_abb) {
 						delete abb;
@@ -259,7 +261,7 @@ void Sistema::ingresar_envios() {
 	std::cout << "Ingrese por teclado el nombre del archivo de la aduana a leer (incluyendo su formato, si es .txt por ejemplo.) " << std::endl;
 	std::cin >> nombreArchivo;
 
-	// Crear un objeto ifstream para la lectura del archivo
+	// Crear un objeto ifstream para la lectura del archivo, con el nombre ingresado.
 	std::ifstream archivo(nombreArchivo);
 
 	// Verificar si el archivo se abrió correctamente
@@ -279,6 +281,8 @@ void Sistema::ingresar_envios() {
 			std::stringstream stream(linea);
 			std::string codigo_aduana_string, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana, dimension_paquete, direccion, precio_base_string,
 				peso_paquete_string, telefono_contacto, contenido_fragil_string;
+
+			//Se leen y se almacenan todos los datos en las variables del paquete, separados por comas.
 
 			std::getline(stream, codigo_aduana_string, ',');
 			std::getline(stream, tipo_envio, ',');
@@ -302,6 +306,8 @@ void Sistema::ingresar_envios() {
 			// Elimina espacios en blanco al final
 			contenido_fragil_string.erase(contenido_fragil_string.find_last_not_of(" ") + 1);
 
+
+			//Variable booleana de contenido frágil.
 			if (contenido_fragil_string == "Si") {
 				contenido_fragil = true;
 
@@ -314,11 +320,14 @@ void Sistema::ingresar_envios() {
 				throw std::invalid_argument("");
 			}
 
+			//Se crea un nuevo paquete, y se inserta en el ABB.
 			Paquete* paquete = new Paquete(codigo_aduana, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana,
 				precio_base, telefono_contacto, peso_paquete, dimension_paquete, contenido_fragil, direccion,
 				"", "", -1);
 
 			abb->insertar(paquete);
+
+			//Se realiza la suma del precio base del paquete a la sumatoria total por el conjunto de datos leído.
 			sumatoria_valores += precio_base;
 		}
 		catch (const std::invalid_argument& e) {
@@ -326,13 +335,20 @@ void Sistema::ingresar_envios() {
 		}
 	}
 
+	
+	//Bloque try y catch.
 	try
 	{
+
+		//Si el vector con los nombres de archivos está vacío, se insertan directamente el nombre del archivo
+		//y el valor total base en el otro vector.
 		if (nombres_conjuntos_aduana.empty()) {
 			nombres_conjuntos_aduana.push_back(nombreArchivo);
 			valor_conjuntos_aduana.push_back(sumatoria_valores);
 		}
 		else {
+
+			//Si no está vacío, primero se busca si ese archivo ya se leyó.
 			bool archivo_encontrado = false;
 			for (int i = 0; i < nombres_conjuntos_aduana.size(); i++) {
 				if (nombres_conjuntos_aduana.at(i) == nombreArchivo) {
@@ -340,6 +356,8 @@ void Sistema::ingresar_envios() {
 				}
 
 			}
+
+			//Si no se leyó, se añade el nombre del archivo y la sumatoria total del valor.
 			if (!archivo_encontrado) {
 				nombres_conjuntos_aduana.push_back(nombreArchivo);
 				valor_conjuntos_aduana.push_back(sumatoria_valores);
@@ -376,18 +394,31 @@ void Sistema::despacho_sucursal(){
 	//Para este último caso, hay que corroborar si ya existe un árbol AVL o no.
 	//Si no hay un AVL, se crea directamente. En el caso contrario, hay que corroborar si hay algún dato nuevo.
 
+
+	//Si hay un ABB...
 	if (hay_abb) {
+
+		//Si el ABB está vacío...
 		if (abb->retornar_raiz_abb() == nullptr) {
 			std::cout << "Error: no hay ningun paquete disponible en la Aduana." << std::endl;
 		}
 		else {
+
+			//Si ya existe un AVL, hay que comprobar si hay algún dato que se traspasará del ABB al AVL, 
+			//que no exista en el AVL actual (un dato nuevo), implicando la eliminación del AVL actual.
 			if (hay_avl) {
+
+				//Se retornan todos los paquetes del ABB.
 				std::queue<Paquete*> paquetesABB = abb->retornar_ABB();
 
 				while (!paquetesABB.empty()) {
 					Paquete* paquete = avl->buscar(paquetesABB.front()->get_codigo_aduana());
 
+					//Si al buscar el paquete en el AVL actual, no existe (el método de buscar retorna nulo),
+					//entonces se debe eliminar el AVL, para crear uno nuevo con los datos nuevos.
 					if (paquete == nullptr) {
+
+						//Generar reporte, y eliminar AVL.
 						reporte_eliminar_avl(2);
 						delete avl;
 						avl = nullptr;
@@ -397,20 +428,28 @@ void Sistema::despacho_sucursal(){
 
 						std::queue<Paquete*> insertar_nuevo_avl = abb->retornar_ABB();
 						while (!insertar_nuevo_avl.empty()) {
+							//Mientras la cola de paquetes del ABB no esté vacía, se clonan los paquetes del ABB para insertarlos
+							//en el nuevo ABB.
 							Paquete* paquete_nuevo = new Paquete(insertar_nuevo_avl.front()->get_codigo_aduana(), insertar_nuevo_avl.front()->get_tipo_envio(),
 								insertar_nuevo_avl.front()->get_numero_de_seguimiento(), insertar_nuevo_avl.front()->get_fecha_recepcion_aduana(), insertar_nuevo_avl.front()->get_precio_base(),
 								insertar_nuevo_avl.front()->get_telefono_contacto(), insertar_nuevo_avl.front()->get_peso_paquete(), insertar_nuevo_avl.front()->get_dimension_paquete(),
 								insertar_nuevo_avl.front()->get_contenido_fragil(), insertar_nuevo_avl.front()->get_direccion(), insertar_nuevo_avl.front()->get_codigo_smt(), insertar_nuevo_avl.front()->get_repartidor(),
 								insertar_nuevo_avl.front()->get_tiempo_entrega());
+							//Insertar.
 							avl->insertar(paquete_nuevo);
 							insertar_nuevo_avl.pop();
 						}
+
+						//Se rompe el ciclo de búsqueda de paquetes, puesto a que ya se creó uno nuevo.
 						break;
 					}
 					paquetesABB.pop();
 				}
 			}
 			else {
+
+				//Si no existe un AVL, se crea directamente, de la misma manera que después de eliminar el actual
+				//(en uas líneas de código más arriba).
 				avl = new AVL();
 				hay_avl = true;
 
@@ -425,11 +464,14 @@ void Sistema::despacho_sucursal(){
 					paquetesABB.pop();
 				}
 			}
+
+			//Se elimina el ABB, y se indica que no hay un ABB.
 			delete abb;
 			abb = nullptr;
 			hay_abb = false;
 		}
 	}else{
+		//Mensaje de error.
 		std::cout << "El arbol ABB de Aduana no existe, intente de nuevo." << std::endl;
 	}
 }
@@ -453,19 +495,20 @@ el archivo, finalmente.
 
 
 
-
 void Sistema::asignar_repartidores() {
 	std::cout << "Asignar repartidores" << std::endl;
 
+	//Solo se puede asignar repartidores si hay un AVL.
 	if (hay_avl) {
 
+		//Si el AVL no está vacío...
 		if (avl->get_raiz() != nullptr) {
 
 			std::string nombreArchivo;
 			std::cout << "Ingrese el nombre del archivo para leer los datos de la sucursal: ";
 			std::cin >> nombreArchivo;
 
-			// Crear un objeto ifstream para la lectura del archivo
+			// Crear un objeto ifstream para la lectura del archivo, con el nombre ingresado.
 			std::ifstream archivo(nombreArchivo);
 
 			// Verificar si el archivo se abrió correctamente
@@ -478,13 +521,16 @@ void Sistema::asignar_repartidores() {
 			std::string linea;
 			int contador_linea = 1;
 
-			// Almacenar en ABB el contenido del archivo línea por línea
+			//Cada dato leído corresponde a un paquete en específico (mediante su código de aduana).
 			while (std::getline(archivo, linea)) {
 				try {
 				
+				//Variable de tipo stringstream.
 				std::stringstream stream(linea);
 				std::string codigo_paquete_string, codigo_smt, repartidor, tiempo_entrega_string;
 
+
+				//Se almacenan los valores del código de paquete que corresponde, con su código SMT, repartidor y tiempo de entrega.
 				std::getline(stream, codigo_paquete_string, ',');
 				std::getline(stream, codigo_smt, ',');
 				std::getline(stream, repartidor, ',');
@@ -492,8 +538,11 @@ void Sistema::asignar_repartidores() {
 
 				int tiempo_entrega = std::stoi(tiempo_entrega_string);
 				int codigo_paquete = std::stoi(codigo_paquete_string);
+
+				//Se realiza la búsqueda del paquete con su código, para asignarle su respectivo repartidor y datos adicionales.
 				Paquete* paqueteAVL = avl->buscar(codigo_paquete);
 
+				//Si el paquete existe, se usan sus métodos set para asignar los atributos.
 					if (paqueteAVL != nullptr) {
 						paqueteAVL->set_codigo_smt(codigo_smt);
 						paqueteAVL->set_repartidor(repartidor);
@@ -530,16 +579,24 @@ Se retorna el vector inicializado para almacenar estas cadenas de texto, con los
 */
 
 
-
 std::string* Sistema::obtener_fecha_actual()
 {
+	//Vector de 2 espacios que almacena el nombre del archivo, y la fecha con la hora de creación.
 	std::string* nombre_y_fecha = new std::string[2];
 
+	//Solamente si hay un AVL.
 	if (hay_avl) {
 
+
+		//Estructura tm hora, con variable de tipo time_t, para obtener la fecha y hora actuales.
 		struct tm hora;
 		std::time_t now = std::time(nullptr);
 		localtime_s(&hora, &now);
+
+		//Aquí se realizan las conversiones de int a string, considerando si el día o el mes es menor a 10
+		//para agregar un 0, o sumar 1900 al año obtenido (el método .tm_year retorna la cantidad de años
+		//transcurridos desde el año 1900). Después de cada conversión a string, se concatenan a cada variable 
+		//correspondiente a la versión string.
 
 		int dia_int = hora.tm_mday;
 		std::string dia_string = "";
@@ -551,10 +608,10 @@ std::string* Sistema::obtener_fecha_actual()
 		if (mes_int < 10) { mes_string += "0"; }
 		mes_string += std::to_string(mes_int);
 
-
 		int anio_int = hora.tm_year + 1900;
 		std::string anio_string = std::to_string(anio_int);
 
+		//La misma conversión se realiza
 
 		int hora_local = hora.tm_hour;
 		int minuto = hora.tm_min;
@@ -579,10 +636,13 @@ std::string* Sistema::obtener_fecha_actual()
 		min_string += std::to_string(minuto);
 		segun_string += std::to_string(segundo);
 
-
+		//La fecha del reporte es la concatenación del día, mes, año, hora, minutos, y segundos.
+		//El nombre del archivo es la concatenación entre la fecha del reporte y "_DatosSucursal.txt", como se pide en el taller.
 		std::string fecha_reporte = dia_string + "-" + mes_string + "-" + anio_string + "_" + hora_string + "-" + min_string + "-" + segun_string;
 		std::string nombre_archivo = fecha_reporte + "_DatosSucursal.txt";
 
+
+		//Se almacenan en sus respectivos espacios en el vector inicializado.
 		nombre_y_fecha[0] = nombre_archivo;
 		nombre_y_fecha[1] = fecha_reporte;
 		return nombre_y_fecha;
@@ -623,9 +683,14 @@ obtener fecha actual), para almacenar la nueva fecha en el archivo de nombres de
 
 void Sistema::reporte_eliminar_avl(int heap_abb_eliminar)
 {
+	//Se obtiene el vector con el nombre del archivo y la fecha, a partir del método de obtener fecha actual.
 	std::string* nombrearchivo_fecha = obtener_fecha_actual();
+
+	//Nuevo archivo de salida, con el nombre del archivo (espacio 0).
 	std::ofstream nuevo_reporte;
 	std::string nombre_archivo = nombrearchivo_fecha[0];
+
+	//Se abre el archivo, y se obtiene la cola con todos los paquetes del AVL a eliminar.
 	nuevo_reporte.open(nombre_archivo, std::ios::out);
 	std::queue <Paquete*> fila_paquetes = avl->obtener_todos_paquetes();
 
@@ -663,7 +728,7 @@ void Sistema::reporte_eliminar_avl(int heap_abb_eliminar)
 			nuevo_reporte << std::endl;
 			
 			if (heap_abb_eliminar == 1) {
-				heap->insertar_paquete(paquete);
+				min_heap->insertar_paquete(paquete);
 			}
 
 			fila_paquetes.pop();
@@ -717,7 +782,7 @@ void Sistema::realizar_entregas() {
 				if (todos_con_repartidor) {
 
 					int cantidad_nodos_avl = avl->cantidad_nodos();
-					heap = new Heap(cantidad_nodos_avl);
+					min_heap = new Heap(cantidad_nodos_avl);
 					reporte_eliminar_avl(1);
 					delete avl;
 					hay_avl = false;
@@ -728,13 +793,13 @@ void Sistema::realizar_entregas() {
 					
 				
 
-					while (heap->get_cantidad_actual() > 0) {
-						Paquete* paquete = heap->extraer_paquete();
+					while (min_heap->get_cantidad_actual() > 0) {
+						Paquete* paquete = min_heap->extraer_paquete();
 						std::cout << "Paquete con codigo de aduana " << paquete->get_codigo_aduana() << ", por el repartidor " << paquete->get_repartidor() << ", tiempo de entrega de " << paquete->get_tiempo_entrega() << " minutos." << std::endl;
 					}
 
-					delete heap;
-					heap = nullptr;
+					delete min_heap;
+					min_heap = nullptr;
 				}
 				else {
 					std::cout << "No se puede realizar la entrega de los paquetes: hay paquetes en la sucursal sin repartidor. Intente de nuevo" << std::endl;
@@ -990,10 +1055,15 @@ void Sistema::leer_reporte(std::string nombre_reporte){
 	{
 		std::cout << "Reporte " << nombre_reporte << std::endl << std::endl;
 		nombre_reporte = nombre_reporte + "_DatosSucursal.txt";
+
+		//Se abre el archivo con el nombre del reporte (incluyendo la partícula "_DatosSucursal.txt").
+
 		std::string linea;
 		std::ifstream reporte_a_leer(nombre_reporte, std::ios::in);
 
 		while (std::getline(reporte_a_leer, linea)) {
+
+			//Se lee el archivo del reporte, desplegando todos los datos del paquete por línea.
 
 			std::stringstream stream(linea);
 			std::string codigo_aduana_string, tipo_envio, numero_de_seguimiento, fecha_recepcion_aduana, dimension_paquete, direccion, precio_base_string,

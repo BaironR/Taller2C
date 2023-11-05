@@ -35,6 +35,7 @@ paquetes del ABB.
 
 std::queue<Paquete*> ABB::retornar_ABB() {
 	std::queue<Paquete*> cola;
+	//La cola es pasada por referencia.
 	retornar_ABB_private(this->raiz, cola);
 	return cola;
 }

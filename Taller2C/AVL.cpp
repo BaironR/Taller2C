@@ -215,6 +215,7 @@ paquetes del AVL, con un tiempo de entrega mayor a 1440 (minutos).
 std::queue<Paquete*> AVL::paquetes_mayor_24_horas()
 {
     std::queue<Paquete*> fila_mayor_24Horas;
+    //La cola es pasada por referencia.
     buscar_paquetes_mayor_24horas(this->raiz,fila_mayor_24Horas);
     return fila_mayor_24Horas;
 }
@@ -233,6 +234,7 @@ void AVL::obtener_paquetes_private(NodoAVL* nodo, std::queue <Paquete*>& cola)
        return;
    }
 
+   //Se añade a la cola, y se recorre en preorden.
     cola.push(nodo->get_paquete());
     obtener_paquetes_private(nodo->get_hijo_izquierdo(),cola);
     obtener_paquetes_private(nodo->get_hijo_derecho(),cola);
@@ -269,6 +271,7 @@ paquetes del AVL.
 std::queue<Paquete*> AVL::obtener_todos_paquetes()
 {
     std::queue <Paquete*> cola;
+    //La cola es pasada por referencia.
     obtener_paquetes_private(this->raiz, cola);
     return cola;
 }
@@ -371,35 +374,42 @@ Finalmente, se retorna el nodo actual, los cambios realizados para las insercion
 */
 
 NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete) {
-
+    
+    //Si el nodo es nulo.
     if (nodo == nullptr) {
         return new NodoAVL(paquete);
     }
-    else if (paquete->get_codigo_aduana() < nodo->get_paquete()->get_codigo_aduana()) {
+
+    //Ir hacia el hijo izquierdo, si el código de aduana a insertar es menor.
+    if (paquete->get_codigo_aduana() < nodo->get_paquete()->get_codigo_aduana()) {
         nodo->set_hijo_izquierdo(insertar_private(nodo->get_hijo_izquierdo(), paquete));
     }
     else if (paquete->get_codigo_aduana() > nodo->get_paquete()->get_codigo_aduana()) {
-
+        //Ir hacia el hijo derecho, si el código de aduana a insertar es mayor.
         nodo->set_hijo_derecho(insertar_private(nodo->get_hijo_derecho(), paquete));
     }
+    else {
+        return nodo;
+    }
 
+    //Designar altura, y cálculo de factor de balance.
     nodo->set_altura(1 + (int) (std::fmax(obtener_altura(nodo->get_hijo_izquierdo()), obtener_altura(nodo->get_hijo_derecho()))));
     int factor_balance = factor_de_balance(nodo);
     
     if (factor_balance < -1 && paquete->get_codigo_aduana() > nodo->get_hijo_derecho()->get_paquete()->get_codigo_aduana()) {
-        //RR
+        //Rotación RR.
         return rotacion_rr(nodo);
     }
     else if (factor_balance > 1 && paquete->get_codigo_aduana() < nodo->get_hijo_izquierdo()->get_paquete()->get_codigo_aduana()) {
-        //LL
+        //Rotación LL.
         return rotacion_ll(nodo);
     }
     else if (factor_balance > 1 && paquete->get_codigo_aduana() > nodo->get_hijo_izquierdo()->get_paquete()->get_codigo_aduana()) {
-        //LR
+        //Rotación LR.
         return rotacion_lr(nodo);
     }
     else if (factor_balance < -1 && paquete->get_codigo_aduana() < nodo->get_hijo_derecho()->get_paquete()->get_codigo_aduana()) {
-        //RL
+        //Rotación RL.
         return rotacion_rl(nodo);
     }
     return nodo;
@@ -416,10 +426,13 @@ el paquete requerido. Si no se encuentra, se retorna null.
 
 Paquete* AVL::buscar_private(NodoAVL* nodo, int codigo_paquete){
     
+    //Si el nodo no existe, se retorna null.
     if (!nodo) {
         return nullptr;
     }
 
+
+    //La búsqueda se hace igual como en un AVL común.
     if (codigo_paquete > nodo->get_paquete()->get_codigo_aduana()) {
         return buscar_private(nodo->get_hijo_derecho(), codigo_paquete);
 
@@ -427,6 +440,7 @@ Paquete* AVL::buscar_private(NodoAVL* nodo, int codigo_paquete){
         return buscar_private(nodo->get_hijo_izquierdo(), codigo_paquete);
      }
 
+    //Se retorna si se encuentra.
     return nodo->get_paquete();
 }
 
@@ -453,10 +467,12 @@ void AVL::buscar_paquetes_mayor_24horas(NodoAVL* nodo, std::queue<Paquete*>& col
         return;
     }
 
+    //Si el paquete tiene más de 1440 minutos de entrega, se añade a la cola.
     if (nodo->get_paquete()->get_tiempo_entrega() > 1440) {
         cola.push(nodo->get_paquete());
     }
 
+    //Recursión en preorden.
     buscar_paquetes_mayor_24horas(nodo->get_hijo_izquierdo(), cola);
     buscar_paquetes_mayor_24horas(nodo->get_hijo_derecho(), cola);
 }
