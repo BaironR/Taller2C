@@ -193,6 +193,7 @@ void AVL::insertar(Paquete* paquete){
     if (this->raiz == nullptr) {
         this->raiz = new NodoAVL(paquete);
     }
+
     else {
         this->raiz = insertar_private(this->raiz, paquete);
     }
@@ -387,9 +388,6 @@ NodoAVL* AVL::insertar_private(NodoAVL* nodo, Paquete* paquete) {
     else if (paquete->get_codigo_aduana() > nodo->get_paquete()->get_codigo_aduana()) {
         //Ir hacia el hijo derecho, si el código de aduana a insertar es mayor.
         nodo->set_hijo_derecho(insertar_private(nodo->get_hijo_derecho(), paquete));
-    }
-    else {
-        return nodo;
     }
 
     //Designar altura, y cálculo de factor de balance.
