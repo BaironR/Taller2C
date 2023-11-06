@@ -11,7 +11,6 @@ Está con un cláusula try y catch, para evitar los errores.
 
 int main() {
     try {
-
         Sistema* sistema = new Sistema(); //Inicialización del sistema.
         sistema->menu_principal(); //Iniciar el menu.
     }

@@ -387,13 +387,12 @@ En ambos casos, la inserción al AVL se produce de la misma forma: a partir de la
 y se insertan a medida que se va vaciando el AVL. Luego, se elimina el ABB, se vuelve nulo, y la variable de hay_abb se cambia a false.
 */
 
-
 void Sistema::despacho_sucursal(){
 
 	//Si existe un árbol ABB, entonces se comprueba si está vacía o si hay paquetes en él.
 	//Para este último caso, hay que corroborar si ya existe un árbol AVL o no.
 	//Si no hay un AVL, se crea directamente. En el caso contrario, hay que corroborar si hay algún dato nuevo.
-
+	std::cout << "Despacho a sucursal" << std::endl;
 
 	//Si hay un ABB...
 	if (hay_abb) {
@@ -449,7 +448,7 @@ void Sistema::despacho_sucursal(){
 			else {
 
 				//Si no existe un AVL, se crea directamente, de la misma manera que después de eliminar el actual
-				//(en uas líneas de código más arriba).
+				//(en unas líneas de código más arriba).
 				avl = new AVL();
 				hay_avl = true;
 
@@ -469,6 +468,7 @@ void Sistema::despacho_sucursal(){
 			delete abb;
 			abb = nullptr;
 			hay_abb = false;
+			std::cout << "Despacho a sucursal completado: los paquetes de la Aduana estan en la Sucursal." << std::endl;
 		}
 	}else{
 		//Mensaje de error.
@@ -492,8 +492,6 @@ Luego, se busca el paquete con su correspondiente código de paquete en el AVL. S
 se asignan sus valores de repartidor, tiempo y código SMT. Todo está encerrado en cláusulas try y catch. Y se cierra
 el archivo, finalmente.
 */
-
-
 
 void Sistema::asignar_repartidores() {
 	std::cout << "Asignar repartidores" << std::endl;
@@ -658,8 +656,6 @@ std::string* Sistema::obtener_fecha_actual()
 //2: ABB
 //3: Eliminar al salir.
 
-
-
 /*
 Método de crear reporte y eliminar el AVL.
 Este método recibe como parámetro una variable entera, que permite diferenciar el uso del método (para
@@ -698,7 +694,11 @@ void Sistema::reporte_eliminar_avl(int heap_abb_eliminar)
 		std::cout << "No se pudo escribir el reporte, intente de nuevo." << std::endl;
 	}
 	else {
+
+		//Mientras la fila no esté vacía...
 		while (!fila_paquetes.empty()) {
+
+			//Se crea un nuevo paquete, con los datos del primero que se encuentra en la fila.
 
 			Paquete* paquete = new Paquete(fila_paquetes.front()->get_codigo_aduana(), fila_paquetes.front()->get_tipo_envio(),
 				fila_paquetes.front()->get_numero_de_seguimiento(), fila_paquetes.front()->get_fecha_recepcion_aduana(), fila_paquetes.front()->get_precio_base(),
@@ -706,50 +706,73 @@ void Sistema::reporte_eliminar_avl(int heap_abb_eliminar)
 				fila_paquetes.front()->get_contenido_fragil(), fila_paquetes.front()->get_direccion(), fila_paquetes.front()->get_codigo_smt(), fila_paquetes.front()->get_repartidor(),
 				fila_paquetes.front()->get_tiempo_entrega());
 
+
+			//String para la variable booleana de contenido frágil.
+
 			std::string fragil = "No";
 			if (paquete->get_contenido_fragil()) {
 				fragil = "Si";
 			}
 
+
+			//Se obtienen los datos de repartidor y código SMT. Si están vacíos, se escribe en el reporte explícitamente
+			//que no tiene repartidor o código SMT.
 			std::string hay_repartidor = paquete->get_repartidor();
 			std::string hay_codigo_smt = paquete->get_codigo_smt();
 
 			if (hay_repartidor == "") {
-				hay_repartidor = "No tiene repartidor";
+				hay_repartidor = "No tiene repartidor asignado";
 			}
 
 			if (hay_codigo_smt == "") {
-				hay_codigo_smt = "No tiene codigo SMT";
+				hay_codigo_smt = "No tiene codigo SMT asignado";
 			}
 
+			//Se escribe en una sola línea de texto del archivo de salida, cada uno de los datos del paquete, separados por comas.
 			nuevo_reporte << paquete->get_codigo_aduana() << "," << paquete->get_tipo_envio() << "," << paquete->get_numero_de_seguimiento() << "," << paquete->get_fecha_recepcion_aduana() << "," << paquete->get_precio_base() << "," <<
 				paquete->get_telefono_contacto() << "," << paquete->get_peso_paquete() << "," << paquete->get_dimension_paquete() << "," << fragil << "," << paquete->get_direccion() << "," << hay_codigo_smt << "," <<
 				hay_repartidor << "," << paquete->get_tiempo_entrega();
+
+			//Salto de línea.
 			nuevo_reporte << std::endl;
 			
+			//Si el código entero enviado para el método corresponde a 1, es porque el método se usará para insertar
+			//datos en el min heap. El paquete se inserta directamente en el min heap.
 			if (heap_abb_eliminar == 1) {
 				min_heap->insertar_paquete(paquete);
 			}
 
 			fila_paquetes.pop();
 		}
+
+		//Se cierra el archivo.
 		nuevo_reporte.close();
 		std::cout << "Reporte generado con exito." << std::endl;
 	}
 
+
+	//A partir del vector retornado con el nombre del archivo y la fecha, se obtiene la fecha y hora del reporte.
 	std::string fecha_hora_reporte = nombrearchivo_fecha[1];
+
+	//Se abre el archivo con los nombres de los reportes ("NombresReportes.txt").
 	std::string nombreArchivosReportes = "NombresReportes.txt";
+
+	//Nuevo archivo de salida, se abre, con el modo de escritura "app", para concatenar (sobreescribir datos sin borrar lo anterior).
 	std::ofstream archivoReportes;
 	archivoReportes.open(nombreArchivosReportes, std::ios::app);
 	if (archivoReportes.is_open()) {
+		//Si se abre el archivo, se escribe la fecha y hora exacta del reporte que se acaba de generar, con un salto de línea.
 		archivoReportes << fecha_hora_reporte;
 		archivoReportes << std::endl;
 		archivoReportes.close();
 	}
 	else {
+		//En cambio, si no existe, se genera un nuevo archivo para las fecha de los reportes.
 		std::cout << "Error: no se pudo abrir el archivo porque no existe, creando uno nuevo..." << std::endl;
 		std::ofstream nuevoArchivoReportes;
 		nuevoArchivoReportes.open("NombresReportes.txt", std::ios::out);
+		nuevoArchivoReportes << fecha_hora_reporte;
+		nuevoArchivoReportes << std::endl;
 		nuevoArchivoReportes.close();
 		std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
 	}
@@ -772,34 +795,44 @@ Finalmente, se elimina el heap, y se designa en null.
 
 void Sistema::realizar_entregas() {
 	try {
+		//Se comprueba que existe un AVL, y que no esté vacío.
 		if (hay_avl) {
 			if (avl->get_raiz() == nullptr) {
 				std::cout << "El arbol AVL de la sucursal esta vacio, intente de nuevo.";
 				return;
 			}
 			else {
+				//Se comprueba que todos los paquetes tengan asignado un repartidor.
 				bool todos_con_repartidor = avl->paquetesConRepartidor();
 				if (todos_con_repartidor) {
 
+					//En ese caso, se crea el heap, a partir de la cantidad de nodos en el AVL,
+					//Se crea el heap, y en el método de reporte_eliminar_avl, se envía con el código 1,
+					//y ahí se insertan los datos clonados del AVL.
 					int cantidad_nodos_avl = avl->cantidad_nodos();
 					min_heap = new Heap(cantidad_nodos_avl);
 					reporte_eliminar_avl(1);
+
+					//Eliminar el AVL, no hay un AVL.
 					delete avl;
+					avl = nullptr;
 					hay_avl = false;
 
 					std::cout << "Se realizara la entrega de los paquetes." << std::endl;
 					std::cout << "Realizando entregas..." << std::endl;
 					std::cout << std::endl;
 					
-				
-
+					//Mientras el heap no esté vacío, se despliega la información (código de aduana, repartidor y tiempo)
+					//del paquete que se encuentra en la raíz del min heap (el paquete con menor tiempo de entrega).
 					while (min_heap->get_cantidad_actual() > 0) {
 						Paquete* paquete = min_heap->extraer_paquete();
 						std::cout << "Paquete con codigo de aduana " << paquete->get_codigo_aduana() << ", por el repartidor " << paquete->get_repartidor() << ", tiempo de entrega de " << paquete->get_tiempo_entrega() << " minutos." << std::endl;
 					}
 
+					//Eliminar el heap.
 					delete min_heap;
 					min_heap = nullptr;
+					std::cout << "Entrega de paquetes completada." << std::endl;
 				}
 				else {
 					std::cout << "No se puede realizar la entrega de los paquetes: hay paquetes en la sucursal sin repartidor. Intente de nuevo" << std::endl;
@@ -813,7 +846,6 @@ void Sistema::realizar_entregas() {
 	catch (const std::exception& e) {
 		std::cout << "Hubo un error de tipo " << e.what() << ", intente de nuevo." << std::endl;
 	}
-	
 }
 
 /*
@@ -852,10 +884,13 @@ void Sistema::generar_reporte() {
 	int mes = 0;
 	int anio = 0;
 
+	//Cadena del reporte de la fecha a buscar.
 	std::string fecha_a_buscar = "";
 
 	try
 	{
+		//El usuario ingresa por teclado la fecha para leer todos los reportes.
+
 		std::cout << "Generar reportes: " << std::endl;
 		std::cout << "Primer reporte: busqueda por fecha " << std::endl;
 		std::cout << "Ingrese el dia del reporte: ";
@@ -865,6 +900,8 @@ void Sistema::generar_reporte() {
 		std::cout << "Ingrese el anio del reporte: ";
 		std::cin >> anio;
 
+		//Reajuste si el día es menor a 10.
+
 		if (dia < 10) {
 			fecha_a_buscar = "0" + std::to_string(dia);
 		}
@@ -872,8 +909,11 @@ void Sistema::generar_reporte() {
 			fecha_a_buscar += std::to_string(dia);
 		}
 
+		//Concatenar un guión.
 		fecha_a_buscar += "-";
 
+
+		//Reajuste si el mes es menor a 10.
 		if (mes < 10) {
 			fecha_a_buscar = "0" + std::to_string(mes);
 		}
@@ -881,8 +921,11 @@ void Sistema::generar_reporte() {
 			fecha_a_buscar += std::to_string(mes);
 		}
 
+		//Concatenar un guión.
 		fecha_a_buscar += "-";
 
+
+		//Reajuste respecto a los años (en todo caso, no existiría ningún archivo registrado con un año menor a 1000).
 		if (anio < 1000) {
 			fecha_a_buscar = "0" + std::to_string(anio);
 		}
@@ -903,47 +946,82 @@ void Sistema::generar_reporte() {
 		std::cout << "Hubo un error de tipo " << e.what() << ", intente de nuevo." << std::endl;
 	}
 	
+	//Se abre el archivo con los nombres de los reportes ("NombresReportes.txt").
 	std::string nombreArchivosReportes = "NombresReportes.txt";
+
+	//Variable de tipo ifstream, el archivo se abre en modo de lectura ("in").
 	std::ifstream archivoReportes;
 	archivoReportes.open(nombreArchivosReportes,std::ios::in);
 
-	if (archivoReportes.is_open()) {
-		std::string linea;
-		std::string fecha;
-
-		while (std::getline(archivoReportes,linea)) {
-			try {
-				std::stringstream stream(linea);
-				std::getline(stream, fecha);
-				std::string fecha_a_coincidir = "";
-
-				for (int i = 0; i < 10; i++) {
-					fecha_a_coincidir += fecha.at(i);
-				}
-
-				if (fecha_a_coincidir == fecha_a_buscar) {
-					leer_reporte(fecha);
-					std::cout << "****************************" << std::endl;
-				}
-			}
-			catch (const std::exception& exception) {
-				std::cout << "Hubo un error de tipo " << exception.what() << ", intente de nuevo." << std::endl;
-			}
-		}
-	}else{
-		std::cout << "Error: no se pudo abrir el archivo porque no existe, creando uno nuevo..." << std::endl;
-		std::ofstream nuevoArchivoReportes;
-		nuevoArchivoReportes.open("NombresReportes.txt");
-		nuevoArchivoReportes.close();
-		std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
-	}
+	//Variable booleana si se encontró un reporte con la fecha especificada.
+	bool se_encontro_reporte = false;
 
 	try
 	{
+		//Si el archivo de nombres de reportes existe, comienza la búsqueda para encontrar todos 
+		//los archivos que coincidan con la fecha ingresada por el usuario.
+		if (archivoReportes.is_open()) {
+			std::string linea;
+
+			//La variable fecha almacena la (valga la redundancia) fecha, leída del archivo de nombres de reportes.
+			std::string fecha;
+
+			while (std::getline(archivoReportes, linea)) {
+				try {
+					std::stringstream stream(linea);
+					std::getline(stream, fecha);
+
+					//La cadena fecha_a_coincidir, contiene precisamente los 10 primeros caracteres
+					//de la variable fecha, que posee el nombre del archivo.
+					//Los primeros 10 caracteres, hacen referencia a la fecha (día-mes-año).
+					std::string fecha_a_coincidir = "";
+
+					for (int i = 0; i < 10; i++) {
+						fecha_a_coincidir += fecha.at(i);
+					}
+
+					//Si la fecha que ingresó el usuario coincide con el que se encuentra en la primera parte
+					//de la fecha leída en el archivo, entonces se lee el reporte, enviando como parámetro al método
+					//leer_reporte el nombre completo del archivo sin la partícula "_DatosSucursal.txt".
+					if (fecha_a_coincidir == fecha_a_buscar) {
+						se_encontro_reporte = true;
+						leer_reporte(fecha);
+						std::cout << "****************************" << std::endl;
+					}
+					
+				}
+				catch (const std::exception& exception) {
+					std::cout << "Hubo un error de tipo " << exception.what() << ", intente de nuevo." << std::endl;
+				}
+			}
+
+			if (!se_encontro_reporte) {
+				std::cout << "No se pudo encontrar ningun reporte con la fecha especificada." << std::endl;
+			}
+		}
+		else {
+			//Si el archivo no existe, se crea uno nuevo con ese mismo nombre, para guardar las fechas y horas de cada reporte.
+			std::cout << "Error: no se pudo abrir el archivo porque no existe, creando uno nuevo..." << std::endl;
+			std::ofstream nuevoArchivoReportes;
+			nuevoArchivoReportes.open("NombresReportes.txt");
+			nuevoArchivoReportes.close();
+			std::cout << "Se genero un nuevo archivo para las fechas de los reportes." << std::endl;
+		}
+	}
+	catch (const std::exception& e) 
+	{
+		std::cout << "Hubo un error de tipo " << e.what() << ", intente de nuevo." << std::endl;
+	}
+	
+	//Desplegar el valor base total de cada conjunto de datos de archivos de aduana.
+	try
+	{
+		//Si el vector de nombres de archivos de aduana está vacío, mensaje de error.
 		if (nombres_conjuntos_aduana.empty()) {
 			std::cout << "No se ha leido ningun archivo con conjuntos de datos para la Aduana." << std::endl;
 		}
 		else {
+			//Se recorre todo el vector, imprimiendo el nombre del archivo y su valor total acumulado.
 			for (int i = 0; i < nombres_conjuntos_aduana.size(); i++) {
 				std::cout << "Valor total para el conjunto de datos del archivo " << nombres_conjuntos_aduana[i] << ": $" << valor_conjuntos_aduana[i] << std::endl;
 			}
@@ -956,25 +1034,38 @@ void Sistema::generar_reporte() {
 		std::cout << std::endl;
 	}
 
+
+	//Desplegar paquetes con tiempo de entrega mayor a 1440 minutos (24 horas), y promedio de tiempo de entrega
+	//de cada uno de los paquetes con los tipos de envío.
 	try {
+		//Se comprueba que exista un AVL, y que no esté vacío.
 		if (hay_avl) {
 			if (avl->get_raiz() != nullptr) {
 
+				//Se obtiene una cola, a partir del método del AVL, con todos los paquetes que poseen
+				//un tiempo de entrega mayor a 1440 minutos (24 horas).
 				std::cout << "Codigo SMT de paquetes con tiempo de entrega mayor a 24 horas (1440 minutos): " << std::endl;
 				std::queue <Paquete*> fila_smt_24horas = avl->paquetes_mayor_24_horas();
 
-				if (fila_smt_24horas.size() == 0) {
+				//Si está vacío, se informa que no hay ningún paquete con la cantidad de tiempo requerida.
+				if (fila_smt_24horas.empty()) {
 					std::cout << "No hay paquetes con un tiempo de entrega mayor a 24 horas." << std::endl;
 				}
 				else {
+					//En el caso contrario, mientras la fila no esté vacía, se despliega el código SMT y el tiempo de entrega
+					//de cada paquete.
 					while (!fila_smt_24horas.empty()) {
 						Paquete* paquete = fila_smt_24horas.front();
-						std::cout << "Paquete con el codigo SMT " << paquete->get_codigo_smt() << ", con un tiempo de entrega de " << paquete->get_tiempo_entrega() << " minutos." << std::endl;
+						std::cout << "Paquete con codigo de aduana " << paquete->get_codigo_aduana() << " con el codigo SMT " << paquete->get_codigo_smt() << ", con un tiempo de entrega de " << paquete->get_tiempo_entrega() << " minutos." << std::endl;
 						fila_smt_24horas.pop();
 					}
 				}
 
 				std::cout << std::endl;
+
+				//Para cada uno de los 3 tipos de envío (Express, Económico y Gratis), 
+				//se obtiene la cantidad de paquetes en el AVL que poseen ese tipo de envío
+				//más la sumatoria total del tiempo de entrega.
 
 				int cantidad_express = avl->cantidad_paquetes_tipo_envio("Express");
 				int suma_tiempo_express = avl->suma_paquetes_tiempo_envio("Express");
@@ -985,6 +1076,12 @@ void Sistema::generar_reporte() {
 				int cantidad_gratis = avl->cantidad_paquetes_tipo_envio("Gratis");
 				int suma_tiempo_gratis = avl->suma_paquetes_tiempo_envio("Gratis");
 				
+
+				//Para los 3 casos: si no hay ningún paquete connese tipo de envío, se informa que no hay paquetes con ese tipo de envío.
+				//En el caso de que si hayan paquetes, pero la sumatoria total se devuelve 0, significa que esos paquetes no tienen un tiempo
+				//de entrega definido (-1). De manera normal, se despliega el promedio normal.
+
+				//Paquetes con tipo de envío Express.
 
 				if (cantidad_express == 0) {
 					std::cout << "No hay ningun paquete con tipo de envio Express en la sucursal. " << std::endl;
@@ -999,6 +1096,8 @@ void Sistema::generar_reporte() {
 					}
 				}
 
+				//Paquetes con tipo de envío Económico.
+
 				if (cantidad_economico == 0) {
 					std::cout << "No hay ningun paquete con tipo de envio Economico en la sucursal. " << std::endl;
 				}
@@ -1012,6 +1111,8 @@ void Sistema::generar_reporte() {
 						std::cout << "Hay un promedio de tiempo de entrega de " + std::to_string(promedio_economico) + " minutos para un paquete con envio Economico." << std::endl;
 					}
 				}
+
+				//Paquetes con tipo de envío Gratis.
 
 				if (cantidad_gratis == 0) {
 					std::cout << "No hay ningun paquete con tipo de envio Gratis en la sucursal. " << std::endl;
@@ -1031,10 +1132,9 @@ void Sistema::generar_reporte() {
 			}
 		}
 		else {
-			std::cout << "No se puede lista los codigos SMT de los paquetes con una entrega mayor a 24 horas ni desplegar promedios de tiempo, ya que no existe el arbol AVL de Sucursal." << std::endl;
+			std::cout << "No se pueden listar los codigos SMT de los paquetes con una entrega mayor a 24 horas ni desplegar promedios de tiempo, ya que no existe el arbol AVL de Sucursal." << std::endl;
 		}
-	}
-	catch (std::exception e) {
+	} catch (std::exception e) {
 		std::cout << "Hubo un error de tipo " << e.what() << ", intente de nuevo." << std::endl;
 	}
 
@@ -1095,9 +1195,24 @@ void Sistema::leer_reporte(std::string nombre_reporte){
 			std::cout << "Dimension del paquete: " << dimension_paquete << std::endl;
 			std::cout << "¿Es fragil? " << contenido_fragil_string << std::endl;
 			std::cout << "Direccion: " << direccion << std::endl;
-			std::cout << "Codigo SMT: " << codigo_smt << std::endl;
-			std::cout << "Repartidor: " << repartidor << std::endl;
-			
+
+
+			//En el caso de que no haya un código SMT, o repartidor asignado.
+			if (codigo_smt == "") {
+				std::cout << "El paquete no tiene codigo SMT." << std::endl;
+			}
+			else {
+				std::cout << "Codigo SMT: " << codigo_smt << std::endl;
+			}
+
+			if (repartidor == "") {
+				std::cout << "El paquete no tiene repartidor asignado." << std::endl;
+			}
+			else {
+				std::cout << "Repartidor: " << repartidor << std::endl;
+			}
+
+			//Si no hay un tiempo de entrega asignado, con el valor -1.
 			if (tiempo == "-1") {
 				std::cout << "No hay tiempo de entrega definido." << std::endl;
 			}
@@ -1106,8 +1221,7 @@ void Sistema::leer_reporte(std::string nombre_reporte){
 			}
 		}
 		std::cout << "---------------------------------" << std::endl;
-	}catch (const std::exception& e)
-	{
+	} catch (const std::exception& e){
 		std::cout << "Hubo un error de tipo " << e.what() << ", intente de nuevo." << std::endl;
 	}
 }
