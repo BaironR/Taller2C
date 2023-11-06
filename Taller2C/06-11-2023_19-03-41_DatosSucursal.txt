@@ -1,0 +1,46 @@
+47394229,Gratis,N/A,31-03-2023,53000,56912345678,150,40x40x40,No,Cap. Carlos Condell,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010168,Economico,WG158209734US,15-11-2022,35500,56987654328,193,43x43x43,No,Uribe 812-760,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010164,Economico,WX125708634ES,23-11-2022,37500,56987654324,197,47x47x47,No,Uribe 808-756,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010162,Economico,QA856734986CN,28-11-2022,39000,56987654322,199,49x49x49,No,Uribe 806-754,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010161,Economico,RP457504275SG,21-11-2022,38000,56987654321,200,50x50x50,Si,Uribe 805-753,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010163,Economico,DT940572198FR,25-11-2022,38500,56987654323,198,48x48x48,Si,Uribe 807-755,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010166,Economico,EZ431870625FR,20-11-2022,36500,56987654326,195,45x45x45,No,Uribe 810-758,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010165,Economico,GK690315782US,21-11-2022,38000,56987654325,196,46x46x46,Si,Uribe 809-757,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010167,Economico,US624789325CN,18-11-2022,36000,56987654327,194,44x44x44,Si,Uribe 811-759,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010172,Economico,QN940765218US,03-11-2022,33500,56987654332,189,39x39x39,No,Uribe 816-764,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010170,Economico,VA504362198US,09-11-2022,34500,56987654330,191,41x41x41,No,Uribe 814-762,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010169,Economico,EM710249873FR,12-11-2022,35000,56987654329,192,42x42x42,Si,Uribe 813-761,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010171,Economico,XS814769325FR,06-11-2022,34000,56987654331,190,40x40x40,Si,Uribe 815-763,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010174,Economico,JM728056319US,30-10-2022,32500,56987654334,187,37x37x37,No,Uribe 818-766,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010173,Economico,PL620479536FR,01-11-2022,33000,56987654333,188,38x38x38,Si,Uribe 817-765,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47010175,Economico,EK941073682FR,20-10-2022,32000,56987654335,186,36x36x36,Si,Uribe 819-767,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807552,Express,OP257420874DE,15-09-2023,41000,56948873075,105,32x32x32,Si,Almte. Juan Jose Latorre 2664,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394237,Gratis,N/A,06-05-2023,48000,56912345676,158,48x48x48,No,Cap. Carlos Condell 9,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394233,Gratis,N/A,16-04-2023,50000,56912345672,154,44x44x44,No,Cap. Carlos Condell 5,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394231,Gratis,N/A,06-04-2023,51000,56912345670,152,42x42x42,No,Cap. Carlos Condell 3,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394230,Gratis,N/A,01-04-2023,52000,56912345679,151,41x41x41,Si,Cap. Carlos Condell 2,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394232,Gratis,N/A,11-04-2023,50500,56912345671,153,43x43x43,Si,Cap. Carlos Condell 4,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394235,Gratis,N/A,26-04-2023,49000,56912345674,156,46x46x46,No,Cap. Carlos Condell 7,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394234,Gratis,N/A,21-04-2023,49500,56912345673,155,45x45x45,Si,Cap. Carlos Condell 6,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394236,Gratis,N/A,01-05-2023,48500,56912345675,157,47x47x47,Si,Cap. Carlos Condell 8,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394241,Gratis,N/A,26-05-2023,46000,56912345670,162,42x42x42,No,Cap. Carlos Condell 13,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394239,Gratis,N/A,16-05-2023,47000,56912345678,160,50x50x50,No,Cap. Carlos Condell 11,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394238,Gratis,N/A,11-05-2023,47500,56912345677,159,49x49x49,Si,Cap. Carlos Condell 10,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394240,Gratis,N/A,21-05-2023,46500,56912345679,161,41x41x41,Si,Cap. Carlos Condell 12,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394243,Gratis,N/A,05-06-2023,45000,56912345672,164,44x44x44,No,Cap. Carlos Condell 15,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47394242,Gratis,N/A,31-05-2023,45500,56912345671,163,43x43x43,Si,Cap. Carlos Condell 14,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807551,Express,RE135058233NL,05-09-2023,40000,56948873074,100,30x30x30,Si,Almte. Juan Jose Latorre 2662,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807560,Express,RW630972145JP,25-10-2023,50000,56948873083,101,40x40x40,Si,Almte. Juan Jose Latorre 2672,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807556,Express,NX572048371JP,05-10-2023,46000,56948873079,105,36x36x36,Si,Almte. Juan Jose Latorre 2668,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807554,Express,BU314726509CN,25-09-2023,44000,56948873077,107,34x34x34,Si,Almte. Juan Jose Latorre 2666,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807553,Express,LM763092841JP,20-09-2023,43000,56948873076,108,33x33x33,No,Almte. Juan Jose Latorre 2665,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807555,Express,IR856209743DE,30-09-2023,45000,56948873078,106,35x35x35,No,Almte. Juan Jose Latorre 2667,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807558,Express,YT456798042JP,15-10-2023,48000,56948873081,103,38x38x38,Si,Almte. Juan Jose Latorre 2670,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807557,Express,FD942653019DE,10-10-2023,47000,56948873080,104,37x37x37,No,Almte. Juan Jose Latorre 2675,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807559,Express,KL920153476DE,20-10-2023,49000,56948873082,102,39x39x39,No,Almte. Juan Jose Latorre 2671,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807564,Express,HX834619245JP,15-11-2023,54000,56948873087,97,27x27x27,Si,Almte. Juan Jose Latorre 2676,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807562,Express,YR569078421JP,05-11-2023,52000,56948873085,99,29x29x29,Si,Almte. Juan Jose Latorre 2674,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807561,Express,ZP752890361DE,30-10-2023,51000,56948873084,100,30x30x30,No,Almte. Juan Jose Latorre 2673,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807563,Express,OG426513870DE,10-11-2023,53000,56948873086,98,28x28x28,No,Almte. Juan Jose Latorre 2675,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47807565,Express,BX516702943DE,20-11-2023,55000,56948873088,96,26x26x26,No,Almte. Juan Jose Latorre 2677,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
+47809561,Express,YH649820365US,10-09-2023,42000,56948873274,110,31x31x31,No,Almte. Juan Jose Latorre 2663,No tiene codigo SMT asignado,No tiene repartidor asignado,-1
