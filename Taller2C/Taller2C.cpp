@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Sistema.h"
 
+//Hecho por Bairon Rojas Castro y Benjamín Rivera Portilla.
+
 /*
 El main del programa.
 Se inicializa el sistema, y se ejecuta el menú principal.
