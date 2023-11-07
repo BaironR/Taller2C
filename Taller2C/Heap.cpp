@@ -100,7 +100,7 @@ Si la cantidad actual de nodos es 0, se retorna null. Si solo hay un elemento, s
 una nueva referencia del paquete con sus datos, se retorna, y elimina el espacio de la raíz.
 
 Si hay más de un elemento, después de crear el paquete a retornar, se elimina el nodo de la raíz, y en la
-raíz asume en su lugar el nodo que está en el último espacio ocupado (espacio actual - 1). Se reduce en 1 la 
+raíz asume en su lugar el nodo que está en el último espacio ocupado (espacio actual - 1), y este último pasa a ser nulo. Se reduce en 1 la 
 cantidad actual de nodos. Y para recuperar la condición de heap, se ejecuta el método de heapify min con el índice
 0, de la raíz, para que el paquete del nodo en el primer espacio posea el menor tiempo de entrega de los paquetes que
 está presentes en el heap de nodos con paquetes.
@@ -134,6 +134,7 @@ Paquete* Heap::extraer_paquete()
 
 	delete arreglo_nodos[0];
 	arreglo_nodos[0] = arreglo_nodos[cantidad_actual-1];
+	arreglo_nodos[cantidad_actual - 1] = nullptr;
 	this->cantidad_actual--;
 	heapify_min(0);
 	return nuevo_paquete;
